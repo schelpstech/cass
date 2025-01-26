@@ -45,6 +45,7 @@ $navigationSettings = [
         'pageid' => 'clearancePage',
         'page_name' => 'Clearance Printout',
         'module' => 'Clearance',
+        'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
         'clearedSchool' => !empty($_GET['clearedSchool']) ? $utility->inputDecode($_GET['clearedSchool']) : (isset($_SESSION['clearedSchool']) ? $_SESSION['clearedSchool'] : null),
     ]
 ];

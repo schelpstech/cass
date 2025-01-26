@@ -35,9 +35,9 @@
                                             </td>
                                             <td style="text-align: center;">
                                                 <?php
-                                                if (($data['schType']) === 1) {
+                                                if (intval($data['schType']) === 1) {
                                                     echo '<b>' . $data['lga'] . '</b>' . " - Public ";
-                                                } elseif (($data['schType']) === 2) {
+                                                } elseif (intval($data['schType']) === 2) {
                                                     echo '<b>' . $data['lga'] . '</b>' . " - Private ";
                                                 } else {
                                                     echo " Unspecified ";
@@ -64,13 +64,13 @@
                                                 $routerURL = '../../app/router.php?pageid=';
 
                                                 // Determine the button configuration based on clearance status
-                                                if ($clearanceStatus === 100) {
+                                                if (intval($clearanceStatus)=== 100) {
                                                     // Button for pending payment
                                                     echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
         class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
         <i class="fas fa-clock me-2"></i> Pending Payment</a>';
-                                                } elseif ($clearanceStatus === 200) {
+                                                } elseif (intval($clearanceStatus) === 200) {
                                                     // Button for printing payment
                                                     echo '<a href="' . $routerURL . $utility->inputEncode('clearancePage') .
                                                         '&clearedSchool=' . $utility->inputEncode($data['centreNumber']) . '" 
