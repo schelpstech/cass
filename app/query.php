@@ -11,7 +11,7 @@ if (file_exists('../../controller/start.inc.php')) {
 };
 
 
-if (isset($_SESSION['active'])) {
+if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
     $tblName = 'book_of_life';
     $conditions = [
         'return_type' => 'count',
@@ -57,7 +57,7 @@ if (isset($_SESSION['active'])) {
 
 
     //Select Capturing Records 
-    if (isset($_SESSION['activeID'])) {
+    if (!empty($_SESSION['activeID']) && isset($_SESSION['activeID'])) {
         $tblName = 'tbl_remittance';
         $conditions = [
             'where' => [
@@ -73,7 +73,7 @@ if (isset($_SESSION['active'])) {
         $CapturingRecords = $model->getRows($tblName, $conditions);
     }
 
-    if (isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'modifyCapturing' || $_SESSION['pageid'] == 'addCandidates') {
+    if ( !empty($_SESSION['pageid']) &&isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'modifyCapturing' || $_SESSION['pageid'] == 'addCandidates') {
 
         $tblName = 'tbl_remittance';
         $conditions = [
@@ -93,7 +93,7 @@ if (isset($_SESSION['active'])) {
 
 
     //Select Capturing Records 
-    if (isset($_SESSION['clearedSchool'])) {
+    if (!empty($_SESSION['clearedSchool']) && isset($_SESSION['clearedSchool'])) {
         // Check if the school has paid
         $tblName = 'tbl_transaction';
         $conditions = [
@@ -132,7 +132,7 @@ if (isset($_SESSION['active'])) {
 
     //Dashboard Panel
 
-    if (isset($_SESSION['module']) && $_SESSION['module'] == 'Dashboard' || 'Clearance') {
+    if (!empty($_SESSION['module']) && isset($_SESSION['module']) && $_SESSION['module'] == 'Dashboard' || 'Clearance') {
 
 
         $tblName = 'tbl_schoolallocation';
