@@ -31,14 +31,14 @@ $navigationSettings = [
         'pageid' => 'modifyCapturing',
         'page_name' => 'Modify Number of Captured Candidates',
         'module' => 'Clearance',
-        'reference' => $_GET['reference'],
+        'reference' =>  !empty($_GET['reference']) ? $_GET['reference'] : null,
         'clearedSchool' => null
     ],
     'addCandidates' => [
         'pageid' => 'addCandidates',
         'page_name' => 'Generate Clearance for Additional Captured Candidates',
         'module' => 'Clearance',
-        'reference' => $_GET['reference'],
+        'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
         'clearedSchool' => null
     ],
     'clearancePage' => [
