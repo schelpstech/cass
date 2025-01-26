@@ -4,7 +4,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> List of Allocated Schools 
+                        <h3 class="card-title"> List of Allocated Schools
                             <?php echo date("d-m-Y") ?>
                         </h3>
                     </div>
@@ -25,7 +25,7 @@
                                 $count = 1;
                                 if (!empty($allocatedSchools)) {
                                     foreach ($allocatedSchools as $data) {
-                                        ?>
+                                ?>
                                         <tr>
                                             <td>
                                                 <?php echo $count++; ?>
@@ -34,30 +34,28 @@
                                                 <?php echo '<b>' . $data['lga'] . '</b>'; ?>
                                             </td>
                                             <td>
-                                                <?php echo'<b>' .  $data['schoolCode']  . '</b>'; ?>
+                                                <?php echo '<b>' .  $data['schoolCode']  . '</b>'; ?>
                                             </td>
                                             <td>
                                                 <?php echo '<b>' . $data['SchoolName'] . '</b>'; ?>
                                             </td>
                                             <td>
-                                                <?php 
-                                                  if (($data['schType']) === 1){
+                                                <?php
+                                                if (intval($data['schType']) === 1) {
                                                     echo " Public ";
-                                                  }
-                                                  elseif (($data['schType']) === 2){
+                                                } elseif (intval($data['schType']) === 2) {
                                                     echo " Private ";
-                                                  }
-                                                  else{
+                                                } else {
                                                     echo " Unspecified ";
-                                                  }
-                                                  ?>
+                                                }
+                                                ?>
                                             </td>
-                                            
+
                                         </tr>
-                                        <?php
+                                <?php
                                     }
                                 } else {
-                                    echo 'No School Allocated for the Active Exam Year ::  '.$_SESSION['examYear'];;
+                                    echo 'No School Allocated for the Active Exam Year ::  ' . $_SESSION['examYear'];;
                                 }
                                 ?>
 
