@@ -10,28 +10,36 @@ $navigationSettings = [
         'pageid' => 'consultantDashboard',
         'page_name' => 'Dashboard',
         'module' => 'Dashboard',
+        'reference' => null,
+        'clearedSchool' => null
     ],
     'schoolsAllocatedList' => [
         'pageid' => 'AllocatedSchoolList',
         'page_name' => 'Allocated School List',
         'module' => 'Report',
+        'reference' => null,
+        'clearedSchool' => null
     ],
     'capturingRecord' => [
         'pageid' => 'capturingRecord',
         'page_name' => 'Record Number of Captured Candidates',
         'module' => 'Clearance',
+        'reference' => null,
+        'clearedSchool' => null
     ],
     'modifyCapturing' => [
         'pageid' => 'modifyCapturing',
         'page_name' => 'Modify Number of Captured Candidates',
         'module' => 'Clearance',
         'reference' => $_GET['reference'],
+        'clearedSchool' => null
     ],
     'addCandidates' => [
         'pageid' => 'addCandidates',
         'page_name' => 'Generate Clearance for Additional Captured Candidates',
         'module' => 'Clearance',
         'reference' => $_GET['reference'],
+        'clearedSchool' => null
     ],
     'clearancePage' => [
         'pageid' => 'clearancePage',
