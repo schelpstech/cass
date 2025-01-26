@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
         try {
             $email = $consultantDetails['contactEmail'] ?? null;
             $amount = (($numberCaptured * 280) * 100) ?? null;
-            $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
+            $callbackUrl = 'https://assoec.org/app/paymentHandler.php';
 
             validatePaymentParameters($email, $amount, $callbackUrl);
 
