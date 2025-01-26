@@ -44,7 +44,7 @@ if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['p
     try {
         $email = $consultantDetails['contactEmail'] ?? null;
         $amount = ($utility->inputDecode($paymentDetails['amountdue']) * 100) ?? null;
-        $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
+        $callbackUrl = 'https://assoec.org/app/paymentHandler.php';
 
         validatePaymentParameters($email, $amount, $callbackUrl);
 
