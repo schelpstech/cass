@@ -95,13 +95,13 @@
                                                 $baseURL = '../../app/router.php?pageid=';
 
                                                 // Determine the button configuration based on clearance status
-                                                if ($clearanceStatus === 100) {
+                                                if (intval($clearanceStatus) === 100) {
                                                     // Button for modifying record when clearance is pending
                                                     echo '<a href="' . $baseURL . $utility->inputEncode('modifyCapturing') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
         class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
         <i class="fas fa-edit me-2"></i> Modify Record</a>';
-                                                } elseif ($clearanceStatus === 200) {
+                                                } elseif (intval($clearanceStatus) === 200) {
                                                     // Button for adding additional candidates when clearance is cleared
                                                     echo '<a href="' . $baseURL . $utility->inputEncode('addCandidates') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
