@@ -31,8 +31,8 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
 
     // Sanitize and validate input data
     $companyData = [
-        'companyName' => filter_var($_POST['companyName'], FILTER_SANITIZE_STRING),
-        'companyAddress' => filter_var($_POST['companyAddress'], FILTER_SANITIZE_STRING),
+        'companyName' =>  preg_replace('/[^a-zA-Z0-9\s&,\.\-\'()]/', '', $_POST['companyName']),
+        'companyAddress' => preg_replace('/[^a-zA-Z0-9\s&,\.\-\'()]/', '', $_POST['companyAddress']),
         'contactPhone' => filter_var($_POST['contactPhone'], FILTER_SANITIZE_NUMBER_INT),
         'contactEmail' => filter_var($_POST['contactEmail'], FILTER_VALIDATE_EMAIL),
     ];
