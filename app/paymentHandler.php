@@ -253,15 +253,14 @@ if (isset($_GET['reference'])) {
                 case 'Additional Candidate':
                     $clearedSchool = json_decode($transDetails['transSchoolCode'], true);
                     $_SESSION['clearedSchool'] = $clearedSchool[0];
-
                     // Get school type
                     $schoolConditions = [
-                        'where' => ['centreNumber' => $_SESSION['clearedSchool']],
+                        'where' => ['centreNumber' => $clearedSchool[0]],
                         'return_type' => 'single'
                     ];
                     $selectedSchoolType = $model->getRows('tbl_schoollist', $schoolConditions);
 
-                    if (empty($selectedSchoolType)) {
+                    if (empty($selectedSchoolType['schType'])) {
                         $utility->redirectWithNotification('danger', 'School Type not specified.', 'capturingRecord');
                     }
 
