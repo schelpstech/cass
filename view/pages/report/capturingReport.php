@@ -10,25 +10,24 @@
                     </div>
 
                     <div class="card-body">
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>S/N</th>
-                                    <th>Zone</th>
-                                    <th>School Name</th>
-                                    <th>Number of Candidates</th>
-                                    <th>Remittance Due</th>
-                                    <th>Clearance </th>
-                                    <th>Modify</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $count = 1;
-                                if (!empty($CapturingRecords)) {
-                                    foreach ($CapturingRecords as $data) {
-
-                                ?>
+                        <?php
+                        $count = 1;
+                        if (!empty($CapturingRecords)) {
+                            foreach ($CapturingRecords as $data) {
+                        ?>
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>Zone</th>
+                                            <th>School Name</th>
+                                            <th>Number of Candidates</th>
+                                            <th>Remittance Due</th>
+                                            <th>Clearance </th>
+                                            <th>Modify</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <tr>
                                             <td>
                                                 <?php echo $count++; ?>
@@ -64,7 +63,7 @@
                                                 $routerURL = '../../app/router.php?pageid=';
 
                                                 // Determine the button configuration based on clearance status
-                                                if (intval($clearanceStatus)=== 100) {
+                                                if (intval($clearanceStatus) === 100) {
                                                     // Button for pending payment
                                                     echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
@@ -115,19 +114,20 @@
         <i class="fas fa-exclamation-circle me-2"></i> Modify Record</a>';
                                                 }
                                                 ?>
-
                                             </td>
-
                                         </tr>
-                                <?php
-                                    }
-                                } else {
-                                    echo 'You have not submitted any Capturing Report for the Active Exam Year ::  ' . $_SESSION['examYear'];;
+                                    <?php
                                 }
-                                ?>
-
-                            </tbody>
-                        </table>
+                                    ?>
+                                    </tbody>
+                                </table>
+                            <?php } else { ?>
+                                <!-- Display message if no transactions -->
+                                <div class="alert alert-info text-center">
+                                    You have not made any capturing record in the active exam year:
+                                    <strong><?php echo htmlspecialchars($_SESSION['examYear']); ?></strong>
+                                </div>
+                            <?php } ?>
                     </div>
                 </div>
             </div>
