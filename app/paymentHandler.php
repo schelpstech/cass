@@ -263,12 +263,7 @@ if (isset($_GET['reference'])) {
                     if (empty($selectedSchoolType['schType'])) {
                         $utility->redirectWithNotification('danger', 'School Type not specified.', 'capturingRecord');
                     }
-
-                    $ratePerCandidate = match ($selectedSchoolType['schType']) {
-                        1 => 280,
-                        2 => 130,
-                        default => throw new Exception('Invalid school type.')
-                    };
+                    $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
 
                     $newNumber = ($amountPaid / $ratePerCandidate) + $utility->inputDecode($_SESSION['ExNumber']);
                     $newAmountPaid = $utility->inputEncode(
