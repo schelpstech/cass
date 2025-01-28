@@ -297,7 +297,7 @@ if (isset($_GET['reference'])) {
 
             // Update clearance status and redirect
             if ($model->upDate($tblName, $updateData, $condition)) {
-                $utility->redirectWithNotification('success', 'Transaction verified and saved successfully.', $destination);
+                $utility->redirectWithNotification('success', 'Transaction verified and saved successfully. School Code is -'. $clearedSchool[0]. ' School Type -'. $selectedSchoolType['schType'] .' Rate -' .$ratePerCandidate . 'AMount - '.$newAmountPaid , $destination);
             } else {
                 throw new Exception('Failed to update clearance status.');
             }
