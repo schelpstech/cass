@@ -266,12 +266,10 @@ if (isset($_GET['reference'])) {
                     $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
 
                     $newNumber = ($amountPaid / $ratePerCandidate) + $utility->inputDecode($_SESSION['ExNumber']);
-                    $newAmountPaid = $utility->inputEncode(
-                        intval($amountPaid) + intval($utility->inputDecode($_SESSION['ExAmount']))
-                    );
+                    $newAmountPaid = intval($amountPaid) + intval($utility->inputDecode($_SESSION['ExAmount']));
 
                     $updateData = [
-                        'amountdue' => $newAmountPaid,
+                        'amountdue' => $utility->inputEncode($newAmountPaid),
                         'numberCaptured' => $utility->inputEncode($newNumber)
                     ];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
