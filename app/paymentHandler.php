@@ -26,6 +26,8 @@ function initializePayment($paystack, $email, $amount, $callbackUrl, $transactio
     return $response['data']['authorization_url'];
 }
 
+$verifyUrl = 'https://assoec.org/app/paymentHandler.php';
+
 // Clearance Process
 if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['pageid']) === 'clearanceProcess') {
     $centreNumber = $utility->inputDecode($_GET['reference']);
@@ -44,7 +46,7 @@ if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['p
     try {
         $email = $consultantDetails['contactEmail'] ?? null;
         $amount = ($utility->inputDecode($paymentDetails['amountdue']) * 100) ?? null;
-        $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
+        $callbackUrl = $verifyUrl;
 
         validatePaymentParameters($email, $amount, $callbackUrl);
 
@@ -115,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
             }
 
             $amount = ($amountDue * 100) ?? null;
-            $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
+            $callbackUrl = $verifyUrl;
 
             validatePaymentParameters($email, $amount, $callbackUrl);
 
@@ -172,7 +174,7 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
         try {
             $email = $consultantDetails['contactEmail'] ?? null;
             $amount = ($balanceRemittance * 100) ?? null;
-            $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
+            $callbackUrl = $verifyUrl;
 
             validatePaymentParameters($email, $amount, $callbackUrl);
 
