@@ -92,7 +92,7 @@
                         </div>
                     </form>
                     <div class="card-footer">
-                        This form is used to add Edit State Command Headquarters Details
+                        This form is used to  Edit Consultant Company Profile
                     </div>
                 </div>
             </div>
