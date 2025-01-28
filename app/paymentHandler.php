@@ -271,7 +271,7 @@ if (isset($_GET['reference'])) {
                     );
 
                     $updateData = [
-                        'amountdue' => $utility->inputEncode($newAmountPaid),
+                        'amountdue' => $newAmountPaid,
                         'numberCaptured' => $utility->inputEncode($newNumber)
                     ];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
