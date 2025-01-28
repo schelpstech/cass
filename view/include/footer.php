@@ -49,7 +49,6 @@
 
 <script src="../plugins/custom/utility.js"></script>
 <script src="../plugins/custom/fetcher.js"></script>
-<script src="../plugins/custom/form_validator.js"></script>
 
 <script src="../plugins/sparklines/sparkline.js"></script>
 <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>

@@ -174,6 +174,7 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
             'where' => [
                 'transInitiator' => $_SESSION['active'],
                 'transExamYear' => $examYear['id'],
+                'transStatus' => 1
             ],
         ]);
 
@@ -193,7 +194,9 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
 
         // Retrieve remittance dues
         $remittanceDue = $model->getRows('tbl_remittance', [
-            'where' => ['submittedby' => $_SESSION['activeID']],
+            'where' => [
+                'submittedby' => $_SESSION['activeID']
+            ],
         ]);
 
         // Initialize the total figure

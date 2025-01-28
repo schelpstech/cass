@@ -1,10 +1,16 @@
+<?php
+if (!empty($SelectedCapturingRecords['schType'])) {
+    $schtypeValue = ($SelectedCapturingRecords['schType'] == 1) ? 'Public' : (($SelectedCapturingRecords['schType'] == 2) ? 'Private' : '');
+} else {
+    $schtypeValue = 'Unspecified';
+} ?>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-10 offset-1">
                 <div class="card card-default">
                     <div class="card-header">
-                        <h3 class="card-title"><strong>Modify record of Captured Candidates by in selected school</strong></h3>
+                        <h3 class="card-title"><strong>Add Record of additional Candidates by in selected school</strong></h3>
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" aria-label="Collapse Form">
                                 <i class="fas fa-minus"></i>
@@ -19,9 +25,9 @@
                         <div class="card-body">
                             <!-- Select School Name -->
                             <div class="form-group">
-                                <label for="schoolName">Selected School Name:</label>
+                                <label for="addschoolName">Selected School Name:</label>
                                 <div class="input-group">
-                                    <select id="schoolName" class="form-control" name="schoolName" readonly required="yes">
+                                    <select id="addschoolName" class="form-control" name="schoolName" readonly required="yes">
                                         <option value="<?php echo $SelectedCapturingRecords['centreNumber']; ?>">
                                             <?php echo $SelectedCapturingRecords['centreNumber'] . " - " . $SelectedCapturingRecords['SchoolName']; ?>
                                         </option>
@@ -31,10 +37,24 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Selected School Type -->
                             <div class="form-group">
-                                <label for="schoolName">Current Number of Cleared Candidates:</label>
+                                <label for="addschoolType">Selected School Type:</label>
                                 <div class="input-group">
-                                    <select id="schoolName" class="form-control" readonly required="yes">
+                                    <select id="addschoolType" class="form-control" name="schoolType" readonly required>
+                                        <option value="<?php echo $schtypeValue; ?>">
+                                            <?php echo $schtypeValue; ?>
+                                        </option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text"><i class="fa fa-synagogue"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="addrecordedcaptured">Current Number of Cleared Candidates:</label>
+                                <div class="input-group">
+                                    <select id="addrecordedcaptured" class="form-control" readonly required="yes">
                                         <option value="<?php echo $SelectedCapturingRecords['numberCaptured']; ?>">
                                             <?php echo $utility->inputDecode($SelectedCapturingRecords['numberCaptured']) ?>
                                         </option>
@@ -47,9 +67,9 @@
 
                             <!-- Number of Candidates Captured -->
                             <div class="form-group">
-                                <label for="numCandidatesCaptured"> Number of Additional Candidates Captured:</label>
+                                <label for="addnumCandidatesCaptured"> Number of Additional Candidates Captured:</label>
                                 <div class="input-group">
-                                    <input type="number" id="numCandidatesCaptured" class="form-control" name="numCandidatesCaptured"
+                                    <input type="number" id="addnumCandidatesCaptured" class="form-control" name="numCandidatesCaptured"
                                         min="1" max="9999" required
                                         title="Please enter a number between 1 and 9999"
                                         placeholder="Enter number of candidates captured" />
@@ -61,9 +81,9 @@
 
                             <!-- Remittance Due -->
                             <div class="form-group">
-                                <label for="remittanceDue">Remittance Due @ &#8358;280 per Candidate:</label>
+                                <label for="addremittanceDue">Remittance Due @ &#8358;280 per Candidate:</label>
                                 <div class="input-group">
-                                    <input type="text" id="remittanceDue" class="form-control" name="remittanceDue"
+                                    <input type="text" id="addremittanceDue" class="form-control" name="remittanceDue"
                                         readonly
                                         placeholder="Calculated remittance due" />
                                     <div class="input-group-append">
@@ -83,7 +103,7 @@
                         </div>
                     </form>
                     <div class="card-footer">
-                        This form is used to modify the number of candidates captured by school.
+                        This form is used to add to the number of candidates captured by school.
                     </div>
                 </div>
             </div>
@@ -91,23 +111,43 @@
     </div>
 </section>
 
+<!-- JavaScript for Remittance Calculation -->
 <script>
-    // JavaScript to dynamically calculate remittance due
-    document.addEventListener("DOMContentLoaded", function() {
-        const numCandidatesField = document.getElementById("numCandidatesCaptured");
-        const remittanceField = document.getElementById("remittanceDue");
+    document.addEventListener("DOMContentLoaded", function () {
+        const numCandidatesField = document.getElementById("addnumCandidatesCaptured");
+        const schoolTypeField = document.getElementById("addschoolType");
+        const remittanceField = document.getElementById("addremittanceDue");
 
-        const ratePerCandidate = 280; // Fixed rate in Naira
+        // Function to calculate remittance
+        function calculateRemittance() {
+            const numCandidates = parseInt(numCandidatesField.value) || 0; // Default to 0 if invalid
+            const schoolType = schoolTypeField.value.trim(); // Get the school type
 
-        numCandidatesField.addEventListener("input", function() {
-            const numCandidates = parseInt(this.value) || 0; // Default to 0 if input is invalid
+            // Determine the rate based on the school type
+            let ratePerCandidate = 0;
+            if (schoolType === "Public") {
+                ratePerCandidate = 280; // Rate for Public schools
+            } else if (schoolType === "Private") {
+                ratePerCandidate = 130; // Rate for Private schools
+            } else {
+                remittanceField.value = "Invalid School Type"; // Handle unexpected school types
+                return; // Exit if school type is invalid
+            }
+
+            // Calculate the remittance due
             const remittanceDue = numCandidates * ratePerCandidate;
 
+            // Update the remittance field
             remittanceField.value = remittanceDue.toLocaleString("en-NG", {
                 style: "currency",
                 currency: "NGN",
-                minimumFractionDigits: 2
+                minimumFractionDigits: 2,
             });
-        });
+        }
+
+        // Add event listener to the number of candidates field
+        if (numCandidatesField) {
+            numCandidatesField.addEventListener("input", calculateRemittance);
+        }
     });
 </script>

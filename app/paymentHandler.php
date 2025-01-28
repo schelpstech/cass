@@ -48,8 +48,7 @@ if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['p
 
         validatePaymentParameters($email, $amount, $callbackUrl);
 
-        $schoolCodes = [];
-        $schoolCodes[] = $centreNumber; // Collect the schoolCode
+        $schoolCodes = [$centreNumber];
         $recordSchoolCode = json_encode($schoolCodes);
 
         $transactionReference = $centreNumber . strtoupper($utility->generateRandomText(4));
@@ -93,13 +92,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
 
         $_SESSION['ExAmount'] = $paymentDetails['amountdue'];
         $_SESSION['ExNumber'] = $paymentDetails['numberCaptured'];
-        $schoolCodes = [];
-        $schoolCodes[] = $recordSchoolCode; // Collect the schoolCode
+        $schoolCodes = [$recordSchoolCode];
         $recordSchoolenCode = json_encode($schoolCodes);
 
         try {
             $email = $consultantDetails['contactEmail'] ?? null;
-            $amount = (($numberCaptured * 280) * 100) ?? null;
+
+            $tblName = 'tbl_schoollist';
+            $conditions = [
+                'where' => [
+                    'centreNumber' => $recordSchoolCode,
+                ],
+                'return_type' => 'single',
+            ];
+            $selectedSchoolType = $model->getRows($tblName, $conditions);
+
+            if (!empty($selectedSchoolType)) {
+                $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : 0);
+                $amountDue = $numberCaptured * $ratePerCandidate;
+            } else {
+                $utility->redirectWithNotification('danger', 'School Type not Specified.', 'capturingRecord');
+            }
+
+            $amount = ($amountDue * 100) ?? null;
             $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
 
             validatePaymentParameters($email, $amount, $callbackUrl);
@@ -127,13 +142,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['additionalCandidates'
     }
 }
 
-
-//Bulk Payment
+// Bulk Payment
 if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkClearanceProcess') {
-
     $dueRemittance = isset($totalfigure) && is_numeric($totalfigure) ? htmlspecialchars($totalfigure) : 0;
     $paidRemittance = isset($totalRemittedfigure) && is_numeric($totalRemittedfigure) ? htmlspecialchars($totalRemittedfigure) : 0;
-    $balanceRemittance =  intval($dueRemittance) - intval($paidRemittance);
+    $balanceRemittance = intval($dueRemittance) - intval($paidRemittance);
 
     $tblName = 'tbl_remittance';
     $conditions = [
@@ -145,20 +158,18 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
     ];
 
     $numberOfSchools = $model->getRows($tblName, $conditions);
-    // Check if rows are returned
     if (!empty($numberOfSchools)) {
-        // Initialize an array to store schoolCode values
         $schoolCodes = [];
         foreach ($numberOfSchools as $row) {
             if (isset($row['recordSchoolCode'])) {
-                $schoolCodes[] = $row['recordSchoolCode']; // Collect the schoolCode
+                $schoolCodes[] = $row['recordSchoolCode'];
             }
         }
+
         $schoolCount = count($schoolCodes);
         $serializedArray = json_encode($schoolCodes);
 
         try {
-
             $email = $consultantDetails['contactEmail'] ?? null;
             $amount = ($balanceRemittance * 100) ?? null;
             $callbackUrl = 'http://localhost/cass/app/paymentHandler.php';
@@ -187,15 +198,15 @@ if (isset($_GET['pageid']) && $utility->inputDecode($_GET['pageid']) === 'bulkCl
         $utility->redirectWithNotification('danger', "No Pending transaction Found", 'capturingRecord');
     }
 }
-
 // Verify Payment
 if (isset($_GET['reference'])) {
     try {
+        // Verify transaction using Paystack API
         $paymentResponse = $paystack->verifyTransaction($_GET['reference']);
 
         if ($paymentResponse['data']['status'] === 'success') {
             $transactionReference = $paymentResponse['data']['reference'];
-            $amountPaid = $paymentResponse['data']['amount'] / 100;
+            $amountPaid = $paymentResponse['data']['amount'] / 100; // Convert amount to standard format
 
             $tblName = 'tbl_transaction';
             $transactionData = [
@@ -205,36 +216,73 @@ if (isset($_GET['reference'])) {
             ];
             $condition = ['transactionRef' => $transactionReference];
 
-            if ($model->upDate($tblName, $transactionData, $condition)) {
-                $conditions = ['return_type' => 'single', 'where' => ['transactionRef' => $transactionReference]];
-                $transDetails = $model->getRows($tblName, $conditions);
-                $tblName = 'tbl_remittance';
+            // Update transaction details in the database
+            if (!$model->upDate($tblName, $transactionData, $condition)) {
+                throw new Exception('Failed to save the transaction in the database.');
+            }
 
-                //Individual School Payment 
-                if ($transDetails['transactionType'] === 'Individual School') {
+            // Retrieve transaction details
+            $conditions = ['return_type' => 'single', 'where' => ['transactionRef' => $transactionReference]];
+            $transDetails = $model->getRows($tblName, $conditions);
+
+            if (!$transDetails) {
+                throw new Exception('Transaction details not found.');
+            }
+
+            $tblName = 'tbl_remittance';
+            $destination = '';
+            $updateData = [];
+            $clearedSchool = [];
+
+            // Handle different transaction types
+            switch ($transDetails['transactionType']) {
+                case 'Individual School':
                     $clearedSchool = json_decode($transDetails['transSchoolCode'], true);
-                    $_SESSION['clearedSchool'] =  $clearedSchool[0];
-                    $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
+                    $_SESSION['clearedSchool'] = $clearedSchool[0];
+
                     $updateData = [
                         'clearanceStatus' => 200,
                         'clearanceDate' => date('Y-m-d')
                     ];
-                    $destination = 'clearancePage';
-                }
-                if ($transDetails['transactionType'] === 'Additional Candidate') {
-                    $newNumber = ($amountPaid / 280) + $utility->inputDecode($_SESSION['ExNumber']);
-                    $newAmountPaid = $utility->inputEncode($amountPaid + $utility->inputDecode($_SESSION['ExAmount']));
-                    $clearedSchool = json_decode($transDetails['transSchoolCode'], true);
-                    $_SESSION['clearedSchool'] =  $clearedSchool[0];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
-                    $updateData['amountdue'] = $utility->inputEncode($newAmountPaid);
-                    $updateData['numberCaptured'] = $utility->inputEncode($newNumber);
-
                     $destination = 'clearancePage';
-                }
+                    break;
 
-                if ($transDetails['transactionType'] === 'Bulk Payment') {
+                case 'Additional Candidate':
+                    $clearedSchool = json_decode($transDetails['transSchoolCode'], true);
+                    $_SESSION['clearedSchool'] = $clearedSchool[0];
 
+                    // Get school type
+                    $schoolConditions = [
+                        'where' => ['centreNumber' => $_SESSION['clearedSchool']],
+                        'return_type' => 'single'
+                    ];
+                    $selectedSchoolType = $model->getRows('tbl_schoollist', $schoolConditions);
+
+                    if (empty($selectedSchoolType)) {
+                        $utility->redirectWithNotification('danger', 'School Type not specified.', 'capturingRecord');
+                    }
+
+                    $ratePerCandidate = match ($selectedSchoolType['schType']) {
+                        1 => 280,
+                        2 => 130,
+                        default => throw new Exception('Invalid school type.')
+                    };
+
+                    $newNumber = ($amountPaid / $ratePerCandidate) + $utility->inputDecode($_SESSION['ExNumber']);
+                    $newAmountPaid = $utility->inputEncode(
+                        intval($amountPaid) + intval($utility->inputDecode($_SESSION['ExAmount']))
+                    );
+
+                    $updateData = [
+                        'amountdue' => $utility->inputEncode($newAmountPaid),
+                        'numberCaptured' => $utility->inputEncode($newNumber)
+                    ];
+                    $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
+                    $destination = 'clearancePage';
+                    break;
+
+                case 'Bulk Payment':
                     $updateData = [
                         'clearanceStatus' => 200,
                         'clearanceDate' => date('Y-m-d')
@@ -245,17 +293,23 @@ if (isset($_GET['reference'])) {
                         'submittedby' => $_SESSION['activeID']
                     ];
                     $destination = 'capturingRecord';
-                }
+                    break;
 
-                $model->upDate($tblName, $updateData, $condition);
+                default:
+                    throw new Exception('Unknown transaction type.');
+            }
+
+            // Update clearance status and redirect
+            if ($model->upDate($tblName, $updateData, $condition)) {
                 $utility->redirectWithNotification('success', 'Transaction verified and saved successfully.', $destination);
             } else {
-                throw new Exception('Could not save the transaction to the database.');
+                throw new Exception('Failed to update clearance status.');
             }
         } else {
             throw new Exception('Transaction verification failed. Status: ' . $paymentResponse['data']['status']);
         }
     } catch (Exception $e) {
-        $utility->redirectWithNotification('danger', "Error verifying transaction: " . $e->getMessage(), 'capturingRecord');
+        // Handle errors and redirect with an error message
+        $utility->redirectWithNotification('danger', 'Error verifying transaction: ' . $e->getMessage(), 'capturingRecord');
     }
 }

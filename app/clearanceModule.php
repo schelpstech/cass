@@ -36,10 +36,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['recordCandidates']) &
     // Generate a unique reference
     $uniqueReference = uniqid('CAP', true);
 
-    // Calculate the remittance amount
-    $ratePerCandidate = 280; // Fixed rate in Naira
-    $amountDue = $numberCaptured * $ratePerCandidate;
-
+    // Query to fetch school type based on school code
+    $tblName = 'tbl_schoollist';
+    $conditions = [
+        'where' => [
+            'centreNumber' => $recordSchoolCode,
+        ],
+        'return_type' => 'single',
+    ];
+    $selectedSchoolType = $model->getRows($tblName, $conditions);
+    if (!empty($selectedSchoolType)) {
+        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
+        // Calculate the remittance amount
+        $amountDue = $numberCaptured * $ratePerCandidate;
+    } else {
+        $utility->redirectWithNotification('danger', 'School Type not Specified.', 'capturingRecord');
+    }
     // Database table names
     $tblRemittance = 'tbl_remittance';
 
@@ -116,9 +128,22 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
     }
 
     // Calculate the remittance amount
-    $ratePerCandidate = 280; // Fixed rate in Naira
-    $amountDue = $numberCaptured * $ratePerCandidate;
-
+    // Query to fetch school type based on school code
+    $tblName = 'tbl_schoollist';
+    $conditions = [
+        'where' => [
+            'centreNumber' => $recordSchoolCode,
+        ],
+        'return_type' => 'single',
+    ];
+    $selectedSchoolType = $model->getRows($tblName, $conditions);
+    if (!empty($selectedSchoolType)) {
+        $ratePerCandidate = ($selectedSchoolType['schType'] == 1) ? 280 : (($selectedSchoolType['schType'] == 2) ? 130 : '');
+        // Calculate the remittance amount
+        $amountDue = $numberCaptured * $ratePerCandidate;
+    } else {
+        $utility->redirectWithNotification('danger', 'School Type not Specified.', 'capturingRecord');
+    }
     // Data to be inserted
     $remittanceData = [
         'amountdue' => $utility->inputEncode($amountDue),

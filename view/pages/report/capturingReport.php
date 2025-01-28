@@ -11,23 +11,25 @@
 
                     <div class="card-body">
                         <?php
-                        $count = 1;
                         if (!empty($CapturingRecords)) {
-                            foreach ($CapturingRecords as $data) {
                         ?>
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>S/N</th>
-                                            <th>Zone</th>
-                                            <th>School Name</th>
-                                            <th>Number of Candidates</th>
-                                            <th>Remittance Due</th>
-                                            <th>Clearance </th>
-                                            <th>Modify</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Zone</th>
+                                        <th>School Name</th>
+                                        <th>Number of Candidates</th>
+                                        <th>Remittance Due</th>
+                                        <th>Clearance </th>
+                                        <th>Modify</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $count = 1;
+                                    foreach ($CapturingRecords as $data) {
+                                    ?>
                                         <tr>
                                             <td>
                                                 <?php echo $count++; ?>
@@ -117,17 +119,17 @@
                                             </td>
                                         </tr>
                                     <?php
-                                }
+                                    }
                                     ?>
-                                    </tbody>
-                                </table>
-                            <?php } else { ?>
-                                <!-- Display message if no transactions -->
-                                <div class="alert alert-info text-center">
-                                    You have not made any capturing record in the active exam year:
-                                    <strong><?php echo htmlspecialchars($_SESSION['examYear']); ?></strong>
-                                </div>
-                            <?php } ?>
+                                </tbody>
+                            </table>
+                        <?php } else { ?>
+                            <!-- Display message if no transactions -->
+                            <div class="alert alert-info text-center">
+                                You have not made any capturing record in the active exam year:
+                                <strong><?php echo htmlspecialchars($_SESSION['examYear']); ?></strong>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
