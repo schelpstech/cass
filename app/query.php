@@ -73,6 +73,34 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
         $CapturingRecords = $model->getRows($tblName, $conditions);
     }
 
+    //Select Capturing Records 
+    if (!empty($_SESSION['activeID']) && isset($_SESSION['activeID'])) {
+        $tblName = 'tbl_remittance';
+        $conditions = [
+            'where' => [
+                'examYearRef' => $examYear['id'],
+                'submittedby' => $_SESSION['activeID'],
+                'clearanceStatus' => 200
+            ],
+            'joinl' => [
+                'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode',
+                'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
+            ],
+            'order_by' => 'centreNumber ASC',
+        ];
+        $clearedSchoolRecords = $model->getRows($tblName, $conditions);
+        
+        $conditions = [
+            'where' => [
+                'examYearRef' => $examYear['id'],
+                'submittedby' => $_SESSION['activeID'],
+                'clearanceStatus' => 200
+            ],
+            'return_type' => 'count',
+        ];
+        $numclearedSchoolRecords = $model->getRows($tblName, $conditions);
+    }
+
     if (!empty($_SESSION['pageid']) && isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'modifyCapturing' || $_SESSION['pageid'] == 'addCandidates') {
 
         $tblName = 'tbl_remittance';

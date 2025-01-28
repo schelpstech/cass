@@ -64,6 +64,13 @@ include '../include/aside.php';
                     include './report/transactionArchive.php';
                     break;
 
+                    case 'consultantClearedSchools':
+                        include './report/clearanceSummary.php';
+                        break;
+
+                        case 'consultantpwdMgr':
+                            include './forms/consultant/passwordmgr.php';
+                            break;
                 default:
                     include './userDashboard.php';
                     echo '<br><br>';

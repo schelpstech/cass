@@ -27,6 +27,20 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
+    'consultantClearedSchools' => [
+        'pageid' => 'consultantClearedSchools',
+        'page_name' => 'Summary of Cleared Schools',
+        'module' => 'Clearance',
+        'reference' => null,
+        'clearedSchool' => null
+    ],
+    'consultantpwdMgr' => [
+        'pageid' => 'consultantpwdMgr',
+        'page_name' => 'Change Login Credential',
+        'module' => 'Dashboard',
+        'reference' => null,
+        'clearedSchool' => null
+    ],
     'transactionHistories' => [
         'pageid' => 'transactionHistories',
         'page_name' => 'Transaction History',

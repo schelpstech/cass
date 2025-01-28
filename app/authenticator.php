@@ -47,7 +47,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['active'] = $userid;
                     $user->recordLog($userid, 'Login Attempt', 'Successful - Access Granted');
                     $utility->notifier('success', 'You have been successfully logged in');
-                    $utility->redirect('./router.php?pageid=' . $utility->inputEncode('consultantDashboard'));
+
+                    $isActive = isset($loginDetails['activeStatus']) && $loginDetails['activeStatus'] == 1;
+                    if (!$isActive) {
+                        $utility->redirect('./router.php?pageid=' . $utility->inputEncode('consultantpwdMgr'));
+                    } else {
+                        $utility->redirect('./router.php?pageid=' . $utility->inputEncode('consultantDashboard'));
+                    }
                 } else {
                     // Access denied
                     $logData = [

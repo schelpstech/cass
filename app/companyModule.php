@@ -73,4 +73,85 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
         // Redirect with error notification
         $utility->redirectWithNotification('danger', 'An error occurred while updating the consultant details.', 'consultantDashboard');
     }
+}elseif (isset($_POST['new_user_password_credential']) && $utility->inputDecode($_POST['new_user_password_credential']) === "user_password_editor_form") {
+    // Ensure the user is authenticated
+    if (!isset($_SESSION['activeID']) || empty($_SESSION['activeID'])) {
+        $utility->redirectWithNotification('danger', 'Unauthorized access. Please log in.', 'login');
+        exit;
+    }
+    $tblName = 'book_of_life';
+    $logTable = 'log';
+
+    $oldPassword = !empty($_POST["oldPassword"]) ? htmlspecialchars($_POST["oldPassword"]) : null;
+    $newPassword = !empty($_POST["newPassword"]) ? htmlspecialchars($_POST["newPassword"]) : null;
+    $confirmPassword = !empty($_POST["confirmPassword"]) ? htmlspecialchars($_POST["confirmPassword"]) : null;
+
+    // Validate passwords
+    if ($newPassword !== $confirmPassword) {
+        $utility->redirectWithNotification('danger', 'Passwords do not match.', 'consultantpwdMgr');
+        exit;
+    }
+
+    if (!$utility->isPasswordStrong($newPassword)) {
+        $utility->redirectWithNotification('danger', 'Password must meet strength requirements.', 'consultantpwdMgr');
+        exit;
+    }
+
+    // Check if the user exists
+    $conditions = [
+        'return_type' => 'count',
+        'where' => ['user_name' => htmlspecialchars($_SESSION['active'])]
+    ];
+    $userExists = $model->getRows($tblName, $conditions);
+
+    if ($userExists === 1) {
+        // Fetch user details
+        $conditions = [
+            'return_type' => 'single',
+            'where' => ['user_name' => htmlspecialchars($_SESSION['active'])]
+        ];
+        $loginDetails = $model->getRows($tblName, $conditions);
+        $passwordHash = $loginDetails['user_password'] ?? '';
+
+        // Verify old password
+        $oldPasswordEncoded = $utility->inputEncode($oldPassword);
+        if ($utility->verifyPassword($oldPasswordEncoded, $passwordHash)) {
+            $newpwd = $utility->encodePassword($newPassword);
+            // Update password
+            $condition = ['user_name' => $_SESSION['active']];
+            $loginData = [
+                'user_password' => $newpwd,
+                'activeStatus' => 1,
+            ];
+
+            try {
+                if (!$model->upDate($tblName, $loginData, $condition)) {
+                    throw new Exception('Failed to update login credential.');
+                }
+
+                // Regenerate session ID for security
+                session_regenerate_id(true);
+
+                // Record the log
+                $user->recordLog(
+                    $_SESSION['active'],
+                    'Consultant Password Modified',
+                    $_SERVER['REMOTE_ADDR'] . ' modified login password'
+                );
+
+                // Redirect with success notification
+                $utility->redirectWithNotification('success', 'Login Credential has been updated.', 'consultantpwdMgr');
+            } catch (Exception $e) {
+                error_log('Error updating password for user ' . $_SESSION['active'] . ': ' . $e->getMessage());
+                $utility->redirectWithNotification('danger', 'An error occurred while updating your login credential.', 'consultantpwdMgr');
+            }
+        } else {
+            $utility->redirectWithNotification('danger', 'Current Password entered is incorrect.', 'consultantpwdMgr');
+        }
+    } else {
+        // Log out the user and redirect
+        $model->log_out_user();
+        $utility->setNotification('alert-success', 'icon fas fa-check', 'Logged out successfully.');
+        $utility->redirect('../view/index.php');
+    }
 }

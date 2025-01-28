@@ -121,16 +121,16 @@ class Utility
     {
         // Step 1: Base64 encode
         $base64Encoded = base64_encode($input);
-    
+
         // Step 2: Hexadecimal encoding of the Base64-encoded data
         $hexEncoded = bin2hex($base64Encoded);
-    
+
         // Step 3: Hash the password with bcrypt
         $hashedPassword = password_hash($hexEncoded, PASSWORD_BCRYPT);
-    
+
         return $hashedPassword;
     }
-    
+
 
     public function verifyPassword($inputPassword, $storedHashedPassword)
     {
@@ -248,5 +248,56 @@ class Utility
             <h5><i class="' . $iconClass . '"></i> Response!</h5>
             ' . $message . '
         </div>';
+    }
+    public function isPasswordStrong($password)
+    {
+        // Define password strength criteria
+        $minLength = 8;
+        $hasUppercase = preg_match('/[A-Z]/', $password); // At least one uppercase letter
+        $hasLowercase = preg_match('/[a-z]/', $password); // At least one lowercase letter
+        $hasNumber = preg_match('/[0-9]/', $password);    // At least one number
+        $hasSpecialChar = preg_match('/[\W_]/', $password); // At least one special character
+
+        // Check if password meets all criteria
+        if (strlen($password) < $minLength) {
+            return [
+                'status' => false,
+                'message' => 'Password must be at least ' . $minLength . ' characters long.'
+            ];
+        }
+
+        if (!$hasUppercase) {
+            return [
+                'status' => false,
+                'message' => 'Password must include at least one uppercase letter.'
+            ];
+        }
+
+        if (!$hasLowercase) {
+            return [
+                'status' => false,
+                'message' => 'Password must include at least one lowercase letter.'
+            ];
+        }
+
+        if (!$hasNumber) {
+            return [
+                'status' => false,
+                'message' => 'Password must include at least one number.'
+            ];
+        }
+
+        if (!$hasSpecialChar) {
+            return [
+                'status' => false,
+                'message' => 'Password must include at least one special character.'
+            ];
+        }
+
+        // If all conditions are met, password is strong
+        return [
+            'status' => true,
+            'message' => 'Password is strong.'
+        ];
     }
 }

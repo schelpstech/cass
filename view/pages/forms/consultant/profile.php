@@ -81,21 +81,60 @@
                                     </div>
                                 </div>
                             </div>
-
-                           
                             <div class="row">
                                 <div class="col-6"></div>
                                 <div class="col-6">
-                                    <button type="submit" name="edit_company_details" value="<?php echo $utility->inputEncode("company_profile_editor_form"); ?>" class="btn btn-info btn-block">Update Consultant Company Profile Details</button>
+                                    <?php
+                                    // Assuming $userExists['activeStatus'] is already fetched
+                                    
+                                    $isActive = isset($consultantDetails['activeStatus']) && $consultantDetails['activeStatus'] == 1;
+                                    $redirectUrl = '../../app/router.php?pageid=' . $utility->inputEncode('consultantpwdMgr');
+                                    ?>
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            name="edit_company_details"
+                                            value="<?php echo $utility->inputEncode('company_profile_editor_form'); ?>"
+                                            class="btn btn-info btn-block"
+                                            id="updateProfileButton"
+                                            <?php if (!$isActive) echo 'disabled'; ?>>
+                                            Update Consultant Company Profile Details
+                                        </button>
+
+                                        <!-- Hidden clickable div for handling disabled button redirection -->
+                                        <?php if (!$isActive): ?>
+                                            <div
+                                                id="redirectDiv"
+                                                style="cursor: pointer; color: transparent; height: 100%; width: 100%; position: absolute; top: 0; left: 0;">
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </form>
                     <div class="card-footer">
-                        This form is used to  Edit Consultant Company Profile
+                        This form is used to Edit Consultant Company Profile
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const isActive = <?php echo $isActive ? 'true' : 'false'; ?>;
+        const redirectUrl = "<?php echo $redirectUrl; ?>";
+
+        if (!isActive) {
+            const redirectDiv = document.getElementById("redirectDiv");
+            redirectDiv.addEventListener("click", function () {
+                alert("You need to change your password first.");
+                window.location.href = redirectUrl;
+            });
+        }
+    });
+</script>

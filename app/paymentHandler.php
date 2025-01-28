@@ -26,7 +26,7 @@ function initializePayment($paystack, $email, $amount, $callbackUrl, $transactio
     return $response['data']['authorization_url'];
 }
 
-$verifyUrl = 'https://assoec.org/app/paymentHandler.php';
+$verifyUrl = 'http://localhost/cass/app/paymentHandler.php';
 
 // Clearance Process
 if (isset($_GET['pageid'], $_GET['reference']) && $utility->inputDecode($_GET['pageid']) === 'clearanceProcess') {

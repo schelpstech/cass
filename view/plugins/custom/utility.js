@@ -53,3 +53,59 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Required form fields are missing.");
     }
 });
+
+
+
+    // Password strength validation
+    const newPasswordInput = document.getElementById("newPassword");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    const passwordStrength = document.getElementById("passwordStrength");
+    const passwordMatch = document.getElementById("passwordMatch");
+
+    // Regular expression for password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+
+    newPasswordInput.addEventListener("input", () => {
+        const password = newPasswordInput.value;
+
+        // Check password strength
+        if (!password) {
+            passwordStrength.innerHTML = "";
+        } else if (passwordRegex.test(password)) {
+            passwordStrength.innerHTML = "<span style='color: green;'>Strong Password</span>";
+        } else {
+            passwordStrength.innerHTML = "<span style='color: red;'>Password does not meet the required criteria</span>";
+        }
+
+        // Check if passwords match
+        checkPasswordMatch();
+    });
+
+    confirmPasswordInput.addEventListener("input", checkPasswordMatch);
+
+    function checkPasswordMatch() {
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (!confirmPassword) {
+            passwordMatch.innerHTML = "";
+        } else if (newPassword === confirmPassword) {
+            passwordMatch.innerHTML = "<span style='color: green;'>Passwords match</span>";
+        } else {
+            passwordMatch.innerHTML = "<span style='color: red;'>Passwords do not match</span>";
+        }
+    }
+
+    // Final form validation before submission
+    document.getElementById("changePasswordForm").addEventListener("submit", function (event) {
+        const newPassword = newPasswordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (!passwordRegex.test(newPassword)) {
+            event.preventDefault();
+            alert("Your new password does not meet the required criteria.");
+        } else if (newPassword !== confirmPassword) {
+            event.preventDefault();
+            alert("New password and confirm password do not match.");
+        }
+    });

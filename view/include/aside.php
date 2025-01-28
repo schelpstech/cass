@@ -54,9 +54,9 @@
                 </li>
 
                 <!-- Report -->
-                <li class="nav-item <?php echo in_array($pageId, ['schoolsAllocatedList', 'dutyPost_manager']) ? 'menu-open' : 'menu-close'; ?>">
+                <li class="nav-item <?php echo in_array($pageId, ['schoolsAllocatedList', 'consultantClearedSchools']) ? 'menu-open' : 'menu-close'; ?>">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-sitemap"></i>
+                        <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Report
                             <i class="fas fa-angle-left right"></i>
@@ -65,19 +65,25 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('schoolsAllocatedList'); ?>" class="nav-link <?php echo ($pageId === 'schoolsAllocatedList') ? 'active' : ''; ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                                <i class="fas fa-synagogue nav-icon"></i>
                                 <p>Allocated Schools</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('dutyPost_manager'); ?>" class="nav-link <?php echo ($pageId === 'dutyPost_manager') ? 'active' : ''; ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantClearedSchools'); ?>" class="nav-link <?php echo ($pageId === 'consultantClearedSchools') ? 'active' : ''; ?>">
+                                <i class="fas fa-check-circle nav-icon"></i>
                                 <p>Clearance Summary</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
+                <!-- Password -->
+                <li class="nav-item <?php echo ($pageId === 'consultantpwdMgr') ? 'menu-open' : ''; ?>">
+                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantpwdMgr'); ?>" class="nav-link <?php echo ($pageId === 'consultantpwdMgr') ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-key"></i>
+                        <p>Credentials</p>
+                    </a>
+                </li>
             </ul>
         </nav>
 
