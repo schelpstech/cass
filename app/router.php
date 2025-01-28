@@ -27,6 +27,13 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
+    'transactionHistories' => [
+        'pageid' => 'transactionHistories',
+        'page_name' => 'Transaction History',
+        'module' => 'Clearance',
+        'reference' => null,
+        'clearedSchool' => null
+    ],
     'modifyCapturing' => [
         'pageid' => 'modifyCapturing',
         'page_name' => 'Modify Number of Captured Candidates',

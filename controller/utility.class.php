@@ -121,18 +121,16 @@ class Utility
     {
         // Step 1: Base64 encode
         $base64Encoded = base64_encode($input);
-
+    
         // Step 2: Hexadecimal encoding of the Base64-encoded data
         $hexEncoded = bin2hex($base64Encoded);
-
-        // Generate a salt for bcrypt (typically, the salt is automatically generated)
-        $salt = password_hash($hexEncoded, PASSWORD_BCRYPT);
-
-        // Hash the password with bcrypt and the generated salt
-        $hashedPassword = password_hash($hexEncoded, PASSWORD_BCRYPT, ['salt' => $salt]);
-
+    
+        // Step 3: Hash the password with bcrypt
+        $hashedPassword = password_hash($hexEncoded, PASSWORD_BCRYPT);
+    
         return $hashedPassword;
     }
+    
 
     public function verifyPassword($inputPassword, $storedHashedPassword)
     {

@@ -62,6 +62,8 @@ class Model
         $sql = 'SELECT ';
         $sql .= array_key_exists("select", $conditions) ? $conditions['select'] : '*';
         $sql .= ' FROM ' . $table;
+    
+        // Handle joins
         if (array_key_exists("join", $conditions)) {
             $sql .= ' INNER JOIN ' . $conditions['join'];
         }
@@ -69,129 +71,93 @@ class Model
             $sql .= ' LEFT JOIN ' . $conditions['leftjoin'];
         }
         if (array_key_exists("joinx", $conditions)) {
-            $sql .= ' INNER JOIN ';
-            $i = 0;
             foreach ($conditions['joinx'] as $key => $value) {
-                $pre = ($i > 0) ? ' INNER JOIN ' : '';
-                $sql .= $pre . $key  . $value;
-                $i++;
+                $sql .= ' INNER JOIN ' . $key . $value;
             }
         }
         if (array_key_exists("joinl", $conditions)) {
-            $sql .= ' LEFT JOIN ';
-            $i = 0;
             foreach ($conditions['joinl'] as $key => $value) {
-                $pre = ($i > 0) ? ' LEFT JOIN ' : '';
-                $sql .= $pre . $key  . $value;
-                $i++;
+                $sql .= ' LEFT JOIN ' . $key . $value;
             }
         }
+    
+        // Handle WHERE conditions
         if (array_key_exists("where", $conditions)) {
             $sql .= ' WHERE ';
-            $i = 0;
+            $clauses = [];
             foreach ($conditions['where'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " = '" . $value . "'";
-                $i++;
+                if (is_array($value)) {
+                    // Handle array values for IN clause
+                    $placeholders = implode(',', array_map(fn($v) => $this->db->quote($v), $value));
+                    $clauses[] = "$key IN ($placeholders)";
+                } else {
+                    $clauses[] = "$key = " . $this->db->quote($value);
+                }
             }
+            $sql .= implode(' AND ', $clauses);
         }
+    
+        // Additional conditional operators
         if (array_key_exists("where_not", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
             foreach ($conditions['where_not'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " != '" . $value . "'";
-                $i++;
+                $sql .= " AND $key != " . $this->db->quote($value);
             }
         }
-
-        if (array_key_exists("null_check", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
-            foreach ($conditions['null_check'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " '" . $value . "'";
-                $i++;
-            }
-        }
-
         if (array_key_exists("where_greater_equals", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
             foreach ($conditions['where_greater_equals'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " >= '" . $value . "'";
-                $i++;
+                $sql .= " AND $key >= " . $this->db->quote($value);
             }
         }
-
         if (array_key_exists("where_lesser_equals", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
             foreach ($conditions['where_lesser_equals'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " <= '" . $value . "'";
-                $i++;
+                $sql .= " AND $key <= " . $this->db->quote($value);
             }
         }
-
         if (array_key_exists("where_lesser", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
             foreach ($conditions['where_lesser'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " < '" . $value . "'";
-                $i++;
+                $sql .= " AND $key < " . $this->db->quote($value);
             }
         }
-
         if (array_key_exists("where_greater", $conditions)) {
-            $sql .= ' WHERE ';
-            $i = 0;
             foreach ($conditions['where_greater'] as $key => $value) {
-                $pre = ($i > 0) ? ' AND ' : '';
-                $sql .= $pre . $key . " > '" . $value . "'";
-                $i++;
+                $sql .= " AND $key > " . $this->db->quote($value);
             }
         }
-
-
-
-        if (array_key_exists("order_by", $conditions)) {
-            $sql .= ' ORDER BY ' . $conditions['order_by'];
-        }
+    
+        // Handle GROUP BY, ORDER BY, LIMIT
         if (array_key_exists("group_by", $conditions)) {
             $sql .= ' GROUP BY ' . $conditions['group_by'];
         }
-
-
-        if (array_key_exists("start", $conditions) && array_key_exists("limit", $conditions)) {
-            $sql .= ' LIMIT ' . $conditions['start'] . ',' . $conditions['limit'];
-        } elseif (!array_key_exists("start", $conditions) && array_key_exists("limit", $conditions)) {
-            $sql .= ' LIMIT ' . $conditions['limit'];
+        if (array_key_exists("order_by", $conditions)) {
+            $sql .= ' ORDER BY ' . $conditions['order_by'];
         }
-
+        if (array_key_exists("limit", $conditions)) {
+            if (array_key_exists("start", $conditions)) {
+                $sql .= ' LIMIT ' . $conditions['start'] . ', ' . $conditions['limit'];
+            } else {
+                $sql .= ' LIMIT ' . $conditions['limit'];
+            }
+        }
+    
+        // Prepare and execute query
         $query = $this->db->prepare($sql);
         $query->execute();
-
+    
+        // Handle return type
         if (array_key_exists("return_type", $conditions) && $conditions['return_type'] != 'all') {
             switch ($conditions['return_type']) {
                 case 'count':
-                    $data = $query->rowCount();
-                    break;
+                    return $query->rowCount();
                 case 'single':
-                    $data = $query->fetch(PDO::FETCH_ASSOC);
-                    break;
+                    return $query->fetch(PDO::FETCH_ASSOC);
                 default:
-                    $data = '';
+                    return false;
             }
         } else {
-            if ($query->rowCount() > 0) {
-                $data = $query->fetchAll();
-            }
+            return $query->rowCount() > 0 ? $query->fetchAll(PDO::FETCH_ASSOC) : false;
         }
-        return !empty($data) ? $data : false;
     }
+    
 
     public function countRows($table, $conditions = array())
     {

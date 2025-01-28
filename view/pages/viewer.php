@@ -23,39 +23,52 @@ include '../include/aside.php';
 
     <section class="content">
         <div class="container-fluid">
-
             <?php
             // Check if pageid exists in the GET request
             $pageId = isset($_GET['pageid']) ? $utility->inputDecode($_GET['pageid']) : '';
 
-            if ($pageId === 'consultantDashboard') {
-                include './userDashboard.php';
-                echo '<br><br>';
-                include './forms/consultant/profile.php';
-            } elseif ($pageId === 'schoolsAllocatedList') {
-                //Allocated School List
-                include './report/schoolList.php';
-            } elseif ($pageId === 'capturingRecord') {
-                include './userDashboard.php';
-                echo '<br><br>';
-                //Record Captured Candidates
-                include './forms/clearance/capturing.php';
-                echo '<br><br>';
-                include './report/capturingReport.php';
-            } elseif ($pageId === 'modifyCapturing') {
-                //Allocated School List
-                include './forms/clearance/modifyCapturing.php';
-            } elseif ($pageId === 'clearancePage') {
-                //Allocated School List
-                include './report/clearance.php';
-            }  elseif ($pageId === 'addCandidates') {
-                //Allocated School List
-                include './forms/clearance/addCandidates.php';
-            } else {
-                // Default case
-                include './userDashboard.php';
-                echo '<br><br>';
-                include './forms/consultant/profile.php';
+            switch ($pageId) {
+                case 'consultantDashboard':
+                    include './userDashboard.php';
+                    echo '<br><br>';
+                    include './forms/consultant/profile.php';
+                    break;
+
+                case 'schoolsAllocatedList':
+                    include './report/schoolList.php';
+                    break;
+
+                case 'capturingRecord':
+                    include './userDashboard.php';
+                    echo '<br><br>';
+                    include './forms/clearance/capturing.php';
+                    echo '<br><br>';
+                    include './report/capturingReport.php';
+                    break;
+
+                case 'modifyCapturing':
+                    include './forms/clearance/modifyCapturing.php';
+                    break;
+
+                case 'clearancePage':
+                    include './report/clearance.php';
+                    break;
+
+                case 'addCandidates':
+                    include './forms/clearance/addCandidates.php';
+                    break;
+
+                case 'transactionHistories':
+                    include './userDashboard.php';
+                    echo '<br><br>';
+                    include './report/transactionArchive.php';
+                    break;
+
+                default:
+                    include './userDashboard.php';
+                    echo '<br><br>';
+                    include './forms/consultant/profile.php';
+                    break;
             }
             ?>
         </div>

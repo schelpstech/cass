@@ -69,19 +69,19 @@
                                                     echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
         class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
-        <i class="fas fa-clock me-2"></i> Pending Payment</a>';
+        <i class="fas fa-clock me-2"></i> Pending :: Pay Now</a>';
                                                 } elseif (intval($clearanceStatus) === 200) {
                                                     // Button for printing payment
                                                     echo '<a href="' . $routerURL . $utility->inputEncode('clearancePage') .
                                                         '&clearedSchool=' . $utility->inputEncode($data['centreNumber']) . '" 
         class="btn btn-outline-success btn-lg btn-block d-flex align-items-center justify-content-center">
-        <i class="fas fa-print me-2"></i> Print Payment</a>';
+        <i class="fas fa-print me-2"></i> Print Clearance</a>';
                                                 } else {
                                                     // Default button for pending payment
                                                     echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
                                                         '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
         class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
-        <i class="fas fa-times-circle me-2"></i> Pending Payment</a>';
+        <i class="fas fa-times-circle me-2"></i> Pending :: Pay Now</a>';
                                                 }
                                                 ?>
 

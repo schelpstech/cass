@@ -73,7 +73,7 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
         $CapturingRecords = $model->getRows($tblName, $conditions);
     }
 
-    if ( !empty($_SESSION['pageid']) &&isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'modifyCapturing' || $_SESSION['pageid'] == 'addCandidates') {
+    if (!empty($_SESSION['pageid']) && isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'modifyCapturing' || $_SESSION['pageid'] == 'addCandidates') {
 
         $tblName = 'tbl_remittance';
         $conditions = [
@@ -92,91 +92,119 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
 
 
 
-    //Select Capturing Records 
-    if (!empty($_SESSION['clearedSchool']) && isset($_SESSION['clearedSchool'])) {
+    // Select Capturing Records
+    if (!empty($_SESSION['clearedSchool'])) {
+
         // Check if the school has paid
         $tblName = 'tbl_transaction';
         $conditions = [
             'where' => [
-                'transSchoolCode' => $_SESSION['clearedSchool'],
-                'transStatus' => 1,
-                'transInitiator' => $_SESSION['active'],
-                'transExamYear' => 1
-            ],
-            'return_type' => 'count',
+                'transStatus' => 1, // Only transactions with status 1 (successful)
+                'transInitiator' => $_SESSION['active'], // Match the current user's active session
+                'transExamYear' => 1, // Specific exam year reference
+                'transactionType' => ['Bulk Payment', 'Additional Candidate', 'Individual School'], // Multiple valid types
+            ]
         ];
         $checkPayment = $model->getRows($tblName, $conditions);
 
-        if ($checkPayment >= 1) {
+        // Check if payment records exist
+        if (!empty($checkPayment)) {
+
             // Retrieve clearance information
             $tblName = 'tbl_remittance';
             $conditions = [
                 'where' => [
-                    'examYearRef' => $examYear['id'],
-                    'submittedby' => $_SESSION['activeID'],
-                    'recordSchoolCode' => $_SESSION['clearedSchool'],
-                    'clearanceStatus' => 200,
+                    'examYearRef' => $examYear['id'], // Match the exam year reference
+                    'submittedby' => $_SESSION['activeID'], // Match the logged-in user's ID
+                    'recordSchoolCode' => $_SESSION['clearedSchool'], // Match the school being queried
+                    'clearanceStatus' => 200, // Ensure clearance status is '200' (approved)
                 ],
                 'joinl' => [
-                    'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode',
-                    'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode',
-                    'tbl_consultantdetails' => ' on tbl_consultantdetails.userid = tbl_remittance.submittedby',
+                    'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode', // Join to school list table
+                    'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode', // Join to local government table
+                    'tbl_consultantdetails' => ' ON tbl_consultantdetails.userid = tbl_remittance.submittedby', // Join to consultant details
                 ],
-                'return_type' => 'single',
+                'return_type' => 'single', // Expect a single result
             ];
             $printClearanceInfo = $model->getRows($tblName, $conditions);
+
+            // Optionally, add further processing for $printClearanceInfo here
         }
     }
 
-
+    //Transaction History
+    if (!empty($_SESSION['pageid']) && isset($_SESSION['pageid']) && $_SESSION['pageid'] == 'transactionHistories') {
+        // Check Payment History
+        $tblName = 'tbl_transaction';
+        $conditions = [
+            'where' => [
+                'transInitiator' => $_SESSION['active'], // Match the current user's active session
+                'transExamYear' => 1, // Specific exam year reference
+                'transactionType' => ['Bulk Payment', 'Additional Candidate', 'Individual School'], // Multiple valid types
+            ]
+        ];
+        $transHistory = $model->getRows($tblName, $conditions);
+    }
 
     //Dashboard Panel
 
-    if (!empty($_SESSION['module']) && isset($_SESSION['module']) && $_SESSION['module'] == 'Dashboard' || 'Clearance') {
+    if (
+        !empty($_SESSION['module']) && isset($_SESSION['module']) &&
+        ($_SESSION['module'] == 'Dashboard' || $_SESSION['module'] == 'Clearance')
+    ) {
 
-
-        $tblName = 'tbl_schoolallocation';
-        $condition = array(
-            'where' => ['consultantID' =>  $_SESSION['activeID']],
+        // Fetch allocated school count
+        $allocatedSchoolNum = $model->getRows('tbl_schoolallocation', [
+            'where' => ['consultantID' => $_SESSION['activeID']],
             'return_type' => 'count',
-        );
-        $allocatedSchoolNum = $model->getRows($tblName, $condition);
-
-        $tblName = 'tbl_remittance';
-        $condition = array(
-            'where' => [
-                'submittedby' =>  $_SESSION['activeID'],
-                'clearanceStatus' =>  200,
-            ],
-            'return_type' => 'count',
-        );
-        $clearedSchoolNum = $model->getRows($tblName, $condition);
-
-
-        $totalRemittancePaid = $model->sumQuery('tbl_transaction', 'transAmount', [
-            'where' => [
-                'transInitiator' => $_SESSION['active'],
-                'transExamYear' => $examYear['id']
-            ]
         ]);
 
-        $tblName = 'tbl_remittance';
-        $condition = array(
+        // Fetch cleared school count
+        $clearedSchoolNum = $model->getRows('tbl_remittance', [
             'where' => [
-                'submittedby' =>  $_SESSION['activeID'],
+                'submittedby' => $_SESSION['activeID'],
+                'clearanceStatus' => 200,
             ],
-        );
-        $remittanceDue = $model->getRows($tblName, $condition);
+            'return_type' => 'count',
+        ]);
+
+        // Sum up the total remittance paid
+        // Retrieve remittance paid
+        $totalRemittancePaid = $model->getRows('tbl_transaction', [
+            'where' => [
+                'transInitiator' => $_SESSION['active'],
+                'transExamYear' => $examYear['id'],
+            ],
+        ]);
+
+        // Initialize the total figure
+        $totalRemittedfigure = 0;
+
+        // Calculate the total figure if remittance paid exists
+        if (!empty($totalRemittancePaid)) {
+            foreach ($totalRemittancePaid as $row) {
+                // Decode 'amountdue' and ensure it's a valid float
+                $amount = floatval($utility->inputDecode($row['transAmount']));
+                $totalRemittedfigure += $amount;
+            }
+        }
+
+
+
+        // Retrieve remittance dues
+        $remittanceDue = $model->getRows('tbl_remittance', [
+            'where' => ['submittedby' => $_SESSION['activeID']],
+        ]);
+
         // Initialize the total figure
         $totalfigure = 0;
 
-        // Check if the $remittanceDue is not empty
+        // Calculate the total figure if remittance due exists
         if (!empty($remittanceDue)) {
             foreach ($remittanceDue as $row) {
-                // Decode the 'amountdue' if it is JSON encoded, otherwise use it directly
-                $amount = $utility->inputDecode($row['amountdue']);
-                // Add the amount to the total figure
-                $totalfigure += floatval($amount); // Ensure the amount is treated as a number
+                // Decode 'amountdue' and ensure it's a valid float
+                $amount = floatval($utility->inputDecode($row['amountdue']));
+                $totalfigure += $amount;
             }
         }
     }
