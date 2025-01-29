@@ -1,3 +1,19 @@
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "responsive": true,
+            "lengthChange": true,
+            "autoWidth": false,
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "pageLength": 10,
+            "order": [[0, "asc"]] // Sorting by S/N
+        }).buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
+    });
+</script>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -27,7 +43,7 @@
                     <!-- Table Content -->
                     <div class="card-body">
                         <?php if (!empty($clearedSchoolRecords)) { ?>
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table id="example" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>S/N</th>

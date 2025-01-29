@@ -1,3 +1,20 @@
+<script>
+    $(document).ready(function () {
+        $('#example1').DataTable({
+            "responsive": true,
+            "lengthChange": true,
+            "autoWidth": false,
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "pageLength": 10,
+            "order": [[0, "asc"]], // Sorting by S/N
+            "buttons": ["copy", "csv", "excel", "pdf", "print"] // Export buttons
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+</script>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">

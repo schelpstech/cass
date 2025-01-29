@@ -47,8 +47,6 @@
 
 <script src="../plugins/chart.js/Chart.min.js"></script>
 
-<script src="../plugins/custom/utility.js"></script>
-<script src="../plugins/custom/fetcher.js"></script>
 
 <script src="../plugins/sparklines/sparkline.js"></script>
 <script src="../plugins/jqvmap/jquery.vmap.min.js"></script>
@@ -80,6 +78,8 @@
 <script src="../plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <script src="../plugins/select2/js/select2.full.min.js"></script>
 <script src="../plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+<script src="../plugins/custom/utility.js"></script>
+<script src="../plugins/custom/fetcher.js"></script>
 
 </body>
 
