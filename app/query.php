@@ -86,7 +86,7 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
             'order_by' => 'centreNumber ASC',
         ];
         $clearedSchoolRecords = $model->getRows($tblName, $conditions);
-        
+
         $conditions = [
             'where' => [
                 'examYearRef' => $examYear['id'],
@@ -236,4 +236,5 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
             }
         }
     }
+
 }

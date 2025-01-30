@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#example1').DataTable({
             "responsive": true,
             "lengthChange": true,
@@ -9,7 +9,9 @@
             "ordering": true,
             "info": true,
             "pageLength": 10,
-            "order": [[0, "asc"]], // Sorting by S/N
+            "order": [
+                [0, "asc"]
+            ], // Sorting by S/N
             "buttons": ["copy", "csv", "excel", "pdf", "print"] // Export buttons
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
@@ -22,7 +24,9 @@
             <div class="col-md-10 offset-1">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">Report of WASSCE Capturing in Schools as at <?php echo date("d-m-Y"); ?></h3>
+                        <h3 class="card-title"> Report of WASSCE Capturing in Schools as at
+                            <?php echo date("d-m-Y") ?>
+                        </h3>
                     </div>
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped">
@@ -33,65 +37,113 @@
                                     <th>School Name</th>
                                     <th>Number of Candidates</th>
                                     <th>Remittance Due</th>
-                                    <th>Clearance</th>
+                                    <th>Clearance </th>
                                     <th>Modify</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($CapturingRecords)): ?>
-                                    <?php $count = 1; ?>
-                                    <?php foreach ($CapturingRecords as $data): ?>
+                                <?php
+                                if (!empty($CapturingRecords)) {
+                                    $count = 1;
+                                    foreach ($CapturingRecords as $data) {
+                                ?>
                                         <tr>
-                                            <td><?php echo $count++; ?></td>
-                                            <td class="text-center">
-                                                <?php 
-                                                    $schoolType = intval($data['schType']);
-                                                    $lga = htmlspecialchars($data['lga']);
-                                                    echo $schoolType === 1 ? "<b>{$lga}</b> - Public" : ($schoolType === 2 ? "<b>{$lga}</b> - Private" : "Unspecified");
-                                                ?>
-                                            </td>
-                                            <td><b><?php echo htmlspecialchars($data['centreNumber']) . ' - ' . htmlspecialchars($data['SchoolName']); ?></b></td>
-                                            <td class="text-center"><b><?php echo htmlspecialchars($utility->inputDecode($data['numberCaptured'])); ?></b></td>
-                                            <td class="text-center"><b><?php echo $utility->money($utility->inputDecode($data['amountdue'])); ?></b></td>
                                             <td>
-                                                <?php 
-                                                    $clearanceStatus = intval($data['clearanceStatus']);
-                                                    $centreNumber = $utility->inputEncode($data['centreNumber']);
-                                                    $paymentURL = '../../app/paymentHandler.php?pageid=clearanceProcess&reference=' . $centreNumber;
-                                                    $routerURL = '../../app/router.php?pageid=clearancePage&clearedSchool=' . $centreNumber;
-
-                                                    if ($clearanceStatus === 100) {
-                                                        echo "<a href='{$paymentURL}' class='btn btn-outline-primary btn-lg btn-block'><i class='fas fa-clock me-2'></i> Pending :: Pay Now</a>";
-                                                    } elseif ($clearanceStatus === 200) {
-                                                        echo "<a href='{$routerURL}' class='btn btn-outline-success btn-lg btn-block'><i class='fas fa-print me-2'></i> Print Clearance</a>";
-                                                    } else {
-                                                        echo "<a href='{$paymentURL}' class='btn btn-outline-danger btn-lg btn-block'><i class='fas fa-times-circle me-2'></i> Pending :: Pay Now</a>";
-                                                    }
+                                                <?php echo $count++; ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php
+                                                if (intval($data['schType']) === 1) {
+                                                    echo '<b>' . $data['lga'] . '</b>' . " - Public ";
+                                                } elseif (intval($data['schType']) === 2) {
+                                                    echo '<b>' . $data['lga'] . '</b>' . " - Private ";
+                                                } else {
+                                                    echo " Unspecified ";
+                                                }
                                                 ?>
                                             </td>
                                             <td>
-                                                <?php 
-                                                    $modifyURL = '../../app/router.php?pageid=modifyCapturing&reference=' . $centreNumber;
-                                                    $addCandidatesURL = '../../app/router.php?pageid=addCandidates&reference=' . $centreNumber;
+                                                <?php echo '<b>' . $data['centreNumber'] . ' - ' . $data['SchoolName'] . '</b>'; ?>
+                                            </td>
 
-                                                    if ($clearanceStatus === 100) {
-                                                        echo "<a href='{$modifyURL}' class='btn btn-outline-primary btn-lg btn-block'><i class='fas fa-edit me-2'></i> Modify Record</a>";
-                                                    } elseif ($clearanceStatus === 200) {
-                                                        echo "<a href='{$addCandidatesURL}' class='btn btn-outline-success btn-lg btn-block'><i class='fas fa-user-plus me-2'></i> Additional Candidate</a>";
-                                                    } else {
-                                                        echo "<a href='{$modifyURL}' class='btn btn-outline-danger btn-lg btn-block'><i class='fas fa-exclamation-circle me-2'></i> Modify Record</a>";
-                                                    }
+                                            <td style="text-align: center;">
+                                                <?php echo '<b>' . $utility->inputDecode($data['numberCaptured']) . '</b>'; ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php echo '<b>' . $utility->money($utility->inputDecode($data['amountdue'])) . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                // Decode the clearance status from the data
+                                                $clearanceStatus = $data['clearanceStatus'];
+
+                                                // Base URLs for the links
+                                                $paymentURL = '../../app/paymentHandler.php?pageid=';
+                                                $routerURL = '../../app/router.php?pageid=';
+
+                                                // Determine the button configuration based on clearance status
+                                                if (intval($clearanceStatus) === 100) {
+                                                    // Button for pending payment
+                                                    echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
+                                                        '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-clock me-2"></i> Pending :: Pay Now</a>';
+                                                } elseif (intval($clearanceStatus) === 200) {
+                                                    // Button for printing payment
+                                                    echo '<a href="' . $routerURL . $utility->inputEncode('clearancePage') .
+                                                        '&clearedSchool=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-success btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-print me-2"></i> Print Clearance</a>';
+                                                } else {
+                                                    // Default button for pending payment
+                                                    echo '<a href="' . $paymentURL . $utility->inputEncode('clearanceProcess') .
+                                                        '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-times-circle me-2"></i> Pending :: Pay Now</a>';
+                                                }
+                                                ?>
+
+                                            </td>
+                                            <td>
+                                                <?php
+                                                // Decode the clearance status from the data
+                                                $clearanceStatus = $data['clearanceStatus'];
+
+                                                // Base URL for the links
+                                                $baseURL = '../../app/router.php?pageid=';
+
+                                                // Determine the button configuration based on clearance status
+                                                if (intval($clearanceStatus) === 100) {
+                                                    // Button for modifying record when clearance is pending
+                                                    echo '<a href="' . $baseURL . $utility->inputEncode('modifyCapturing') .
+                                                        '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-primary btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-edit me-2"></i> Modify Record</a>';
+                                                } elseif (intval($clearanceStatus) === 200) {
+                                                    // Button for adding additional candidates when clearance is cleared
+                                                    echo '<a href="' . $baseURL . $utility->inputEncode('addCandidates') .
+                                                        '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-success btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-user-plus me-2"></i> Additional Candidate</a>';
+                                                } else {
+                                                    // Default button for modifying record
+                                                    echo '<a href="' . $baseURL . $utility->inputEncode('modifyCapturing') .
+                                                        '&reference=' . $utility->inputEncode($data['centreNumber']) . '" 
+        class="btn btn-outline-danger btn-lg btn-block d-flex align-items-center justify-content-center">
+        <i class="fas fa-exclamation-circle me-2"></i> Modify Record</a>';
+                                                }
                                                 ?>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="7" class="text-center alert alert-info">
-                                            You have not made any capturing record in the active exam year: <strong><?php echo htmlspecialchars($_SESSION['examYear']); ?></strong>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
+                                <?php
+                                    }
+                                } else {
+                                    echo '<div class="alert alert-info text-center">
+                                You have not made any capturing record in the active exam year:
+                                <strong>' . htmlspecialchars($_SESSION['examYear']) . '</strong>
+                            </div>';
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>

@@ -179,6 +179,63 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateCandidates'
         // Redirect with error notification
         $utility->redirectWithNotification('danger', 'An error occurred while updating the number of captured candidates.', 'capturingRecord');
     }
-} else {
+} if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_submitted_clearance']) && $utility->inputDecode($_POST['verify_submitted_clearance']) === 'checkClearanceValidity') {
+    $clearanceCode = isset($_POST['clearanceCode']) ? htmlspecialchars($_POST['clearanceCode'], ENT_QUOTES, 'UTF-8') : '';
+
+    if (empty($clearanceCode)) {
+        $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID cannot be empty.');
+        $utility->redirect('../view/verifyClearance.php');
+        exit;
+    }
+
+    $tblName = 'tbl_remittance';
+    $conditions = ['where' => ['Rem_uniquereference' => $clearanceCode], 'return_type' => 'count'];
+    $referedSchoolCount = $model->getRows($tblName, $conditions);
+
+    if ($referedSchoolCount === 1) {
+        $conditions = ['where' => ['Rem_uniquereference' => $clearanceCode], 'return_type' => 'single'];
+        $referedSchool = $model->getRows($tblName, $conditions);
+
+        if (!empty($referedSchool) && isset($referedSchool['clearanceStatus']) && $referedSchool['clearanceStatus'] == 200) {
+            $_SESSION['referencedSchoolForVerification'] = $referedSchool['recordSchoolCode'];
+            $utility->redirect('../view/verificationpage.php');
+        } else {
+            $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Payment pending on this Clearance ID.');
+            $utility->redirect('../view/verifyClearance.php');
+        }
+    } else {
+        $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID does not exist in our record.');
+        $utility->redirect('../view/verifyClearance.php');
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['verify_submitted_clearance_ID'])) {
+    $clearanceCode = isset($_GET['verify_submitted_clearance_ID']) ? $utility->inputDecode($_GET['verify_submitted_clearance_ID']) : '';
+
+    if (empty($clearanceCode)) {
+        $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID cannot be empty.');
+        $utility->redirect('../view/verifyClearance.php');
+        exit;
+    }
+
+    $tblName = 'tbl_remittance';
+    $conditions = ['where' => ['Rem_uniquereference' => $clearanceCode], 'return_type' => 'count'];
+    $referedSchoolCount = $model->getRows($tblName, $conditions);
+
+    if ($referedSchoolCount === 1) {
+        $conditions = ['where' => ['Rem_uniquereference' => $clearanceCode], 'return_type' => 'single'];
+        $referedSchool = $model->getRows($tblName, $conditions);
+
+        if (!empty($referedSchool) && isset($referedSchool['clearanceStatus']) && $referedSchool['clearanceStatus'] == 200) {
+            $_SESSION['referencedSchoolForVerification'] = $referedSchool['recordSchoolCode'];
+            $utility->redirect('../view/verificationpage.php');
+        } else {
+            $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Payment pending on this Clearance ID.');
+            $utility->redirect('../view/verifyClearance.php');
+        }
+    } else {
+        $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID does not exist in our record.');
+        $utility->redirect('../view/verifyClearance.php');
+    }
+}
+ else {
     $utility->redirectWithNotification('danger', 'Unknown Request.', 'capturingRecord');
 }
