@@ -21,7 +21,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <!-- Dashboard -->
-                <li class="nav-item <?php echo ($pageId === 'consultantDashboard') ? 'menu-open' : ''; ?>">
+                <li class="nav-item ">
                     <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantDashboard'); ?>" class="nav-link <?php echo ($pageId === 'consultantDashboard') ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-stream"></i>
                         <p>Dashboard</p>
@@ -29,7 +29,7 @@
                 </li>
 
                 <!-- Clearance -->
-                <li class="nav-item <?php echo in_array($pageId, ['capturingRecord', 'transactionHistories']) ? 'menu-open' : 'menu-close'; ?>">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon far fa-address-card"></i>
                         <p>
@@ -54,7 +54,7 @@
                 </li>
 
                 <!-- Report -->
-                <li class="nav-item <?php echo in_array($pageId, ['schoolsAllocatedList', 'consultantClearedSchools']) ? 'menu-open' : 'menu-close'; ?>">
+                <li class="nav-item ">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-copy"></i>
                         <p>
@@ -78,7 +78,7 @@
                     </ul>
                 </li>
                 <!-- Password -->
-                <li class="nav-item <?php echo ($pageId === 'consultantpwdMgr') ? 'menu-open' : ''; ?>">
+                <li class="nav-item">
                     <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantpwdMgr'); ?>" class="nav-link <?php echo ($pageId === 'consultantpwdMgr') ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-key"></i>
                         <p>Credentials</p>
