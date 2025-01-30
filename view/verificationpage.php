@@ -1,20 +1,25 @@
 <?php
 include '../app/query.php';
 
+if(isset( $_SESSION['referencedSchoolForVerification']) && !empty( $_SESSION['referencedSchoolForVerification'])){
+    $tblName = 'tbl_remittance';
+    $conditions = [
+        'where' => [
+            'recordSchoolCode' => $_SESSION['referencedSchoolForVerification'], // Match the school being queried
+            'clearanceStatus' => 200, // Ensure clearance status is '200' (approved)
+        ],
+        'joinl' => [
+            'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode', // Join to school list table
+            'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode', // Join to local government table
+            'tbl_consultantdetails' => ' ON tbl_consultantdetails.userid = tbl_remittance.submittedby', // Join to consultant details
+        ],
+        'return_type' => 'single', // Expect a single result
+    ];
+}else{
+    $utility->setNotification('alert-danger', 'icon fas fa-ban', 'Invalid! Clearance ID does not exist in our record.');
+        $utility->redirect('../view/verifyClearance.php');
+}
 
-$tblName = 'tbl_remittance';
-$conditions = [
-    'where' => [
-        'recordSchoolCode' => $_SESSION['referencedSchoolForVerification'], // Match the school being queried
-        'clearanceStatus' => 200, // Ensure clearance status is '200' (approved)
-    ],
-    'joinl' => [
-        'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode', // Join to school list table
-        'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode', // Join to local government table
-        'tbl_consultantdetails' => ' ON tbl_consultantdetails.userid = tbl_remittance.submittedby', // Join to consultant details
-    ],
-    'return_type' => 'single', // Expect a single result
-];
 $verifyClearanceInfo = $model->getRows($tblName, $conditions);
 
 ?>
