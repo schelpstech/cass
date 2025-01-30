@@ -22,7 +22,7 @@ include '../app/query.php';
                 <img src="../storage/app/moest.jpg" width="200" />
                 <?php
                 if (isset($_SESSION['msg'])) {
-                    printf('<b>%s</b>', htmlspecialchars($_SESSION['msg']));
+                    printf('<b>%s</b>',$_SESSION['msg']);
                     unset($_SESSION['msg']);
                 }
                 ?>
