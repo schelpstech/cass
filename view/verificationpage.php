@@ -62,7 +62,7 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
                     <div class="card card-secondary card-outline">
                         <div class="card-body box-profile">
                             <!-- Watermark added here -->
-                            <div class="watermark"><?php echo ($verifyClearanceInfo['Rem_uniquereference'] == 200) ? 'VALID CASS 3 CLEARANCE ' : (($verifyClearanceInfo['clearanceStatus'] == 100) ? 'PENDING' : 'Unknown'); ?></div>
+                            <div class="watermark"><?php echo ($verifyClearanceInfo['clearanceStatus'] == 200) ? 'VALID CASS 3 CLEARANCE ' : (($verifyClearanceInfo['clearanceStatus'] == 100) ? 'PENDING' : 'Unknown'); ?></div>
 
                             <!-- Header Section -->
                             <div class="row">
