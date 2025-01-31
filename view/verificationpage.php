@@ -35,6 +35,23 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
     <link rel="stylesheet" href="./plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="./plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <link rel="stylesheet" href="./dist/css/adminlte.min2167.css?v=3.2.0">
+    <style>
+        /* Watermark Styles */
+        .watermark {
+            position: fixed; /* Fixed position so it stays in place */
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust to exact center */
+            z-index: 9999; /* Ensure it appears above content */
+            font-size: 5rem; /* Large text */
+            color: rgba(255, 0, 0, 0.2); /* Light red with transparency */
+            font-weight: bold; /* Make the text bold */
+            pointer-events: none; /* Ensure the watermark does not block interactions */
+            user-select: none; /* Disable text selection */
+            white-space: nowrap;
+            text-transform: uppercase; /* Make the text uppercase */
+        }
+    </style>
 </head>
 
 <body class="hold-transition login-page">
@@ -44,6 +61,9 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
                 <div class="col-lg-12">
                     <div class="card card-secondary card-outline">
                         <div class="card-body box-profile">
+                            <!-- Watermark added here -->
+                            <div class="watermark">CASS 3 Clearance</div>
+
                             <!-- Header Section -->
                             <div class="row">
                                 <div class="col-lg-4 offset-lg-4 text-center">
@@ -137,52 +157,9 @@ $verifyClearanceInfo = $model->getRows($tblName, $conditions);
         </div>
     </section>
 
-    <div id="warningMessage" style="display:none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: rgba(255, 0, 0, 0.7); color: white; font-size: 18px; border-radius: 10px;">
-        Warning: Screenshot capture detected!
-    </div>
-
     <script src="./plugins/jquery/jquery.min.js"></script>
     <script src="./plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="./dist/js/adminlte.min2167.js?v=3.2.0"></script>
-
-    <script>
-        // Function to redirect after 60 seconds
-        setTimeout(function() {
-            window.location.href = "https://example.com"; // Change the URL to wherever you want to redirect
-        }, 60000); // 60 seconds
-
-        // Detect print screen attempt (this is an approximation and might not work for all scenarios)
-        document.addEventListener('keydown', function(event) {
-            // 44 is the keycode for "Print Screen"
-            if (event.keyCode === 44) {
-                document.getElementById('warningMessage').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('warningMessage').style.display = 'none';
-                }, 3000); // Show warning for 3 seconds
-            }
-        });
-
-        // Disable right-click (context menu)
-        document.addEventListener('contextmenu', function(event) {
-            event.preventDefault();
-            document.getElementById('warningMessage').style.display = 'block';
-            setTimeout(function() {
-                document.getElementById('warningMessage').style.display = 'none';
-            }, 3000); // Show warning for 3 seconds
-        });
-
-        // Block some common keyboard shortcuts (for screen capture or inspect element)
-        document.addEventListener('keydown', function(event) {
-            if (event.keyCode == 123 || (event.ctrlKey && event.shiftKey && event.keyCode == 73) || (event.ctrlKey && event.keyCode == 85)) {
-                // Prevent the default behavior (F12, Ctrl+Shift+I, Ctrl+U)
-                event.preventDefault();
-                document.getElementById('warningMessage').style.display = 'block';
-                setTimeout(function() {
-                    document.getElementById('warningMessage').style.display = 'none';
-                }, 3000); // Show warning for 3 seconds
-            }
-        });
-    </script>
 </body>
 
 </html>
