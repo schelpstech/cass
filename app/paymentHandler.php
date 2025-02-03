@@ -270,7 +270,8 @@ if (isset($_GET['reference'])) {
 
                     $updateData = [
                         'amountdue' => $utility->inputEncode($newAmountPaid),
-                        'numberCaptured' => $utility->inputEncode($newNumber)
+                        'numberCaptured' => $utility->inputEncode($newNumber),
+                        'clearanceDate' => date('Y-m-d')
                     ];
                     $condition = ['recordSchoolCode' => $_SESSION['clearedSchool']];
                     $destination = 'clearancePage';
