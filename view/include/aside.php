@@ -22,7 +22,7 @@
 
                 <!-- Dashboard -->
                 <li class="nav-item ">
-                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantDashboard'); ?>" class="nav-link <?php echo ($pageId === 'consultantDashboard') ? 'active' : ''; ?>">
+                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantDashboard'); ?>" class="nav-link <?php echo ($pageId == 'consultantDashboard') ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-stream"></i>
                         <p>Dashboard</p>
                     </a>
@@ -39,13 +39,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('capturingRecord'); ?>" class="nav-link <?php echo ($pageId === 'capturingRecord') ? 'active' : ''; ?>">
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('capturingRecord'); ?>" class="nav-link <?php echo ($pageId == 'capturingRecord') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Process Clearance</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('transactionHistories'); ?>" class="nav-link <?php echo ($pageId === 'transactionHistories') ? 'active' : ''; ?>">
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('transactionHistories'); ?>" class="nav-link <?php echo ($pageId == 'transactionHistories') ? 'active' : ''; ?>">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Transaction History</p>
                             </a>
@@ -64,13 +64,13 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('schoolsAllocatedList'); ?>" class="nav-link <?php echo ($pageId === 'schoolsAllocatedList') ? 'active' : ''; ?>">
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('schoolsAllocatedList'); ?>" class="nav-link <?php echo ($pageId == 'schoolsAllocatedList') ? 'active' : ''; ?>">
                                 <i class="fas fa-synagogue nav-icon"></i>
                                 <p>Allocated Schools</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantClearedSchools'); ?>" class="nav-link <?php echo ($pageId === 'consultantClearedSchools') ? 'active' : ''; ?>">
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantClearedSchools'); ?>" class="nav-link <?php echo ($pageId == 'consultantClearedSchools') ? 'active' : ''; ?>">
                                 <i class="fas fa-check-circle nav-icon"></i>
                                 <p>Clearance Summary</p>
                             </a>
@@ -79,7 +79,7 @@
                 </li>
                 <!-- Password -->
                 <li class="nav-item">
-                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantpwdMgr'); ?>" class="nav-link <?php echo ($pageId === 'consultantpwdMgr') ? 'active' : ''; ?>">
+                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantpwdMgr'); ?>" class="nav-link <?php echo ($pageId == 'consultantpwdMgr') ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-key"></i>
                         <p>Credentials</p>
                     </a>
