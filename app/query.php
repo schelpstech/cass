@@ -38,18 +38,21 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
     $_SESSION['examYear'] =  $examYear['year'];
 
 
-//Select All Allocated Schools
-
+// Select All Allocated Schools
 $tblName = 'tbl_schoolallocation';
 $conditions = [
     'where' => [
         'consultantID' => $_SESSION['activeID'],
     ],
-    'where_raw' => 'schoolCode NOT IN (SELECT recordSchoolCode FROM tbl_remittance)',
+    'where_raw' => "schoolCode NOT IN (
+        SELECT recordSchoolCode FROM tbl_remittance 
+        WHERE consultantID = " . $_SESSION['activeID'] . " 
+        AND examYearRef = " . $examYear['id'] . "
+    )",
     'joinl' => [
-        'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
-        'examyear' => ' on examyear.id = tbl_schoolallocation.examYear',
-        'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
+        'tbl_schoollist' => ' ON tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
+        'examyear' => ' ON examyear.id = tbl_schoolallocation.examYear',
+        'lga_tbl' => ' ON lga_tbl.waecCode = tbl_schoollist.lgaCode',
     ],
     'order_by' => 'SchoolName ASC',
 ];
