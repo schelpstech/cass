@@ -12,8 +12,8 @@
                             <div class="col-lg-10 offset-lg-1">
                                 <div class="text-center">
                                     <br>
-                                    <h1><strong>Ogun State Ministry of Education, Science & Technology</strong></h1>
-                                    <h2><strong>Biometrics & CASS 3 Clearance for WASSCE 2025</strong></h2>
+                                    <h2><strong>Ogun State Ministry of Education, Science & Technology</strong></h2>
+                                    <h3><strong>Biometrics & CASS 3 Clearance for WASSCE 2025</strong></h3>
                                 </div>
                             </div>
                         </div>
