@@ -38,19 +38,23 @@ if (!empty($_SESSION['active']) && isset($_SESSION['active'])) {
     $_SESSION['examYear'] =  $examYear['year'];
 
 
-    //Select All Allocated Schools
+//Select All Allocated Schools
 
-    $tblName = 'tbl_schoolallocation';
-    $conditions = [
-        'where' => ['consultantID' =>  $_SESSION['activeID']],
-        'joinl' => [
-            'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
-            'examyear' => ' on examyear.id = tbl_schoolallocation.examYear',
-            'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
-        ],
-        'order_by' => 'SchoolName ASC',
-    ];
-    $allocatedSchools = $model->getRows($tblName, $conditions);
+$tblName = 'tbl_schoolallocation';
+$conditions = [
+    'where' => [
+        'consultantID' => $_SESSION['activeID'],
+    ],
+    'where_raw' => 'schoolCode NOT IN (SELECT recordSchoolCode FROM tbl_remittance)',
+    'joinl' => [
+        'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
+        'examyear' => ' on examyear.id = tbl_schoolallocation.examYear',
+        'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
+    ],
+    'order_by' => 'SchoolName ASC',
+];
+
+$allocatedSchools = $model->getRows($tblName, $conditions);
 
 
     //Select Capturing Records 

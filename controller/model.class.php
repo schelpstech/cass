@@ -57,6 +57,7 @@ class Model
         }
     }
 
+
     public function getRows($table, $conditions = array())
     {
         $sql = 'SELECT ';
@@ -82,19 +83,27 @@ class Model
         }
     
         // Handle WHERE conditions
+        $whereClauses = [];
+    
         if (array_key_exists("where", $conditions)) {
-            $sql .= ' WHERE ';
-            $clauses = [];
             foreach ($conditions['where'] as $key => $value) {
                 if (is_array($value)) {
-                    // Handle array values for IN clause
+                    // Handle IN clause
                     $placeholders = implode(',', array_map(fn($v) => $this->db->quote($v), $value));
-                    $clauses[] = "$key IN ($placeholders)";
+                    $whereClauses[] = "$key IN ($placeholders)";
                 } else {
-                    $clauses[] = "$key = " . $this->db->quote($value);
+                    $whereClauses[] = "$key = " . $this->db->quote($value);
                 }
             }
-            $sql .= implode(' AND ', $clauses);
+        }
+    
+        // Support for raw WHERE conditions (e.g., subqueries)
+        if (array_key_exists("where_raw", $conditions)) {
+            $whereClauses[] = $conditions['where_raw'];
+        }
+    
+        if (!empty($whereClauses)) {
+            $sql .= ' WHERE ' . implode(' AND ', $whereClauses);
         }
     
         // Additional conditional operators
@@ -157,6 +166,7 @@ class Model
             return $query->rowCount() > 0 ? $query->fetchAll(PDO::FETCH_ASSOC) : false;
         }
     }
+    
     
 
     public function countRows($table, $conditions = array())
