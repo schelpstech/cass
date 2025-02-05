@@ -28,7 +28,7 @@
                         <div class="row">
                             <div class="col-lg-6 offset-lg-3 text-center">
                                 <img src="<?php echo $generator->generateQRCode(
-                                                'http://192.168.0.165/cass/app/clearanceModule.php?verify_submitted_clearance_ID=' .
+                                                'https://assoec.org/app/clearanceModule.php?verify_submitted_clearance_ID=' .
                                                     $utility->inputEncode($printClearanceInfo['Rem_uniquereference'])
                                             ); ?>" alt="QR Code" class="img-fluid">
                             </div>
