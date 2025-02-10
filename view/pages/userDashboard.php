@@ -38,7 +38,7 @@
                             <div class="icon">
                                 <i class="fas fa-money-bill"></i>
                             </div>
-                            <a href="../../app/paymentHandler.php?pageid=<?php echo $utility->inputEncode('transactionHistories') ?>" class="small-box-footer">
+                            <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('transactionHistories') ?>" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>
