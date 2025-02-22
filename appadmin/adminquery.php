@@ -60,9 +60,15 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
     ) {
 
         // Fetch allocated school count
-        $allocatedSchoolNum = $model->getRows('tbl_schoolallocation', [
+        $tblName = 'tbl_schoolallocation';
+        $conditions = [
+            'where' => [
+                'examYear' =>$examYear['id'],
+            ],
             'return_type' => 'count',
-        ]);
+        ];
+        $allocatedSchoolNum = $model->getRows($tblName, $conditions);
+
 
         // Fetch cleared school count
         $clearedSchoolNum = $model->getRows('tbl_remittance', [

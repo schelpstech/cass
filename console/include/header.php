@@ -1,5 +1,5 @@
 <?php
-include '../../app/query.php';
+include '../../appadmin/adminquery.php';
 if (!isset($_SESSION['activeAdmin'])) {
     $utility->setNotification('alert-danger', 'icon fas fa-ban', 'No Log in session found. Try again.');
     $utility->redirect('../index.php');

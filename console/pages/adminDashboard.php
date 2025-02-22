@@ -46,7 +46,7 @@
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-warning" role="region" aria-label="Schools Allocated">
                             <div class="inner">
-                                <h3><?php echo isset($allocatedSchoolNum) && is_numeric($allocatedSchoolNum) ? intval($allocatedSchoolNum) : $allocatedSchoolNum; ?></h3>
+                                <h3><?php echo isset($allocatedSchoolNum) && is_numeric($allocatedSchoolNum) ? intval($allocatedSchoolNum) : 0; ?></h3>
                                 <p>Schools Allocated</p>
                             </div>
                             <div class="icon">
