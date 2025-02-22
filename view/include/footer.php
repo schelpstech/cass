@@ -1,25 +1,25 @@
 <div class="modal fade" id="sign_out">
-        <div class="modal-dialog">
-            <div class="modal-content bg-danger">
-                <div class="modal-header">
-                    <h4 class="modal-title">Sign Out </h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>You are about to log out your existing session </p>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                    <form action="../../app/authenticator.php" method="post">
-                        <button type="submit" name="log_out_user" value="<?php echo base64_encode('log_out_user_form');?>" class="btn btn-outline-light">Proceed</button>
-                    </form>
-                </div>
+    <div class="modal-dialog">
+        <div class="modal-content bg-danger">
+            <div class="modal-header">
+                <h4 class="modal-title">Sign Out </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>You are about to log out your existing session </p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
+                <form action="../../app/authenticator.php" method="post">
+                    <button type="submit" name="log_out_user" value="<?php echo base64_encode('log_out_user_form'); ?>" class="btn btn-outline-light">Proceed</button>
+                </form>
             </div>
         </div>
     </div>
-    
+</div>
+
 <footer class="main-footer">
     <strong>Copyright &copy; <?php echo date("Y") ?> <a href="https://assoec.com">Association of Educational Consultants - Ogun State Chapter </a></strong>
     All rights reserved.
