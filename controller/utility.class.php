@@ -45,6 +45,12 @@ class Utility
         return "&#8358;" . preg_replace($regex, ",", $amount);
     }
 
+    public function number($amount)
+    {
+        $regex = "/\B(?=(\d{3})+(?!\d))/i";
+        return preg_replace($regex, ",", $amount);
+    }
+
 
     public function RemoveSpecialChar($str)
     {
