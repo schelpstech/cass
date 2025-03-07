@@ -217,7 +217,7 @@ $allocatedSchools = $model->getRows($tblName, $conditions);
         if (!empty($totalRemittancePaid)) {
             foreach ($totalRemittancePaid as $row) {
                 // Decode 'amountdue' and ensure it's a valid float
-                $amount = floatval($utility->inputDecode($row['transAmount']));
+                $amount = intval($utility->inputDecode($row['transAmount']));
                 $totalRemittedfigure += $amount;
             }
         }
@@ -238,7 +238,7 @@ $allocatedSchools = $model->getRows($tblName, $conditions);
         if (!empty($remittanceDue)) {
             foreach ($remittanceDue as $row) {
                 // Decode 'amountdue' and ensure it's a valid float
-                $amount = floatval($utility->inputDecode($row['amountdue']));
+                $amount = intval($utility->inputDecode($row['amountdue']));
                 $totalfigure += $amount;
             }
         }
