@@ -28,10 +28,53 @@
                     </a>
                 </li>
 
-                <!-- Clearance -->
+                <!-- Consultant -->
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon far fa-address-card"></i>
+                        <p>
+                            Consultant
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('consultantRecord'); ?>" class="nav-link <?php echo ($pageId == 'consultantRecord') ? 'active' : ''; ?>">
+                                <i class="far fa-circle nav-icon"></i>
+                                    <p>Manage Consultants</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- School -->
+                <li class="nav-item ">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            School
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('manageschoollist'); ?>" class="nav-link <?php echo ($pageId == 'manageschoollist') ? 'active' : ''; ?>">
+                                <i class="fas fa-synagogue nav-icon"></i>
+                                <p>Manage Schools</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('manageschoolallocation'); ?>" class="nav-link <?php echo ($pageId == 'manageschoolallocation') ? 'active' : ''; ?>">
+                                <i class="fas fa-check-circle nav-icon"></i>
+                                <p>School Allocation</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Clearance -->
+                <li class="nav-item ">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
                         <p>
                             Clearance
                             <i class="fas fa-angle-left right"></i>
@@ -39,53 +82,26 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('capturingRecord'); ?>" class="nav-link <?php echo ($pageId == 'capturingRecord') ? 'active' : ''; ?>">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Process Clearance</p>
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('reportSchoolClearance'); ?>" class="nav-link <?php echo ($pageId == 'reportSchoolClearance') ? 'active' : ''; ?>">
+                                <i class="fas fa-synagogue nav-icon"></i>
+                                <p>School Clearance Report </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('transactionHistories'); ?>" class="nav-link <?php echo ($pageId == 'transactionHistories') ? 'active' : ''; ?>">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('reportConsultantClearance'); ?>" class="nav-link <?php echo ($pageId == 'reportConsultantClearance') ? 'active' : ''; ?>">
+                                <i class="fas fa-check-circle nav-icon"></i>
+                                <p>Consultant Clearance Report</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('reportTransactionHistory'); ?>" class="nav-link <?php echo ($pageId == 'reportTransactionHistory') ? 'active' : ''; ?>">
+                                <i class="fas fa-check-circle nav-icon"></i>
                                 <p>Transaction History</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
-                <!-- Report -->
-                <li class="nav-item ">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-copy"></i>
-                        <p>
-                            Report
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('schoolsAllocatedList'); ?>" class="nav-link <?php echo ($pageId == 'schoolsAllocatedList') ? 'active' : ''; ?>">
-                                <i class="fas fa-synagogue nav-icon"></i>
-                                <p>Allocated Schools</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('consultantClearedSchools'); ?>" class="nav-link <?php echo ($pageId == 'consultantClearedSchools') ? 'active' : ''; ?>">
-                                <i class="fas fa-check-circle nav-icon"></i>
-                                <p>Clearance Summary</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- Password -->
-                <li class="nav-item">
-                    <a href="../../app/router.php?pageid=<?php echo $utility->inputEncode('consultantpwdMgr'); ?>" class="nav-link <?php echo ($pageId == 'consultantpwdMgr') ? 'active' : ''; ?>">
-                        <i class="nav-icon fas fa-key"></i>
-                        <p>Credentials</p>
-                    </a>
-                </li>
             </ul>
         </nav>
-
     </div>
 </aside>

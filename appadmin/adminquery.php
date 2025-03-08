@@ -204,4 +204,18 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
             }
         }
     }
+
+    if (
+        !empty($_SESSION['module']) && isset($_SESSION['module']) &&
+        ($_SESSION['module'] == 'Report' || $_SESSION['module'] == 'Clearance')
+    ) {
+        $tblName = 'book_of_life';
+        $conditions = [
+            'joinl' => [
+                'tbl_consultantdetails' => ' on book_of_life.userid = tbl_consultantdetails.userId'
+            ]
+        ];
+        $userlists = $model->getRows($tblName, $conditions);
+    }
+
 }

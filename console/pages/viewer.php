@@ -32,8 +32,9 @@ include '../include/aside.php';
                     include './adminDashboard.php';
                     break;
 
-                case 'schoolsAllocatedList':
-                    include './report/schoolList.php';
+                case 'consultantRecord':
+                    include './form/consultantCreate.php';
+                    include './report/consultantMgr.php';
                     break;
 
                 case 'capturingRecord':

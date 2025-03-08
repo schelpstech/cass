@@ -13,9 +13,9 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
-    'schoolsAllocatedList' => [
-        'pageid' => 'AllocatedSchoolList',
-        'page_name' => 'Allocated School List',
+    'consultantRecord' => [
+        'pageid' => 'consultantRecord',
+        'page_name' => 'Approved Consultant List',
         'module' => 'Report',
         'reference' => null,
         'clearedSchool' => null

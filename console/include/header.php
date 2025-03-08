@@ -11,14 +11,7 @@ if (!isset($_SESSION['activeAdmin'])) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        <?php
-        if (isset($_SESSION['clearedSchool']) && $_SESSION['pageid'] === 'clearancePage') {
-            echo $printClearanceInfo['centreNumber'] . ' - ' . $printClearanceInfo['SchoolName'] . ' - CASS 3 Clearance';
-        } else {
-            echo $_SESSION['active'] . ' - CASS 3 Clearance Portal';
-        } ?>
-    </title>
+    <title> CASS 3 Clearance Portal</title>
     <link rel="icon" type="image/x-icon" href="../../storage/app/ogun.png">
     <link rel="stylesheet" href="../../view/plugins/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="../../view/plugins/fontawesome-free/css/all.min.css">
