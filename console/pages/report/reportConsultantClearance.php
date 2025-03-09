@@ -10,7 +10,7 @@
             "info": true,
             "pageLength": 100,
             "order": [
-                [1, "asc"]
+                [0, "asc"]
             ], // Sorting by S/N
             "buttons": ["copy", "csv", "excel", "pdf", "print"], // Export buttons
             "language": {
@@ -27,7 +27,7 @@
             <div class="col-lg-10 offset-1">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> Report of Clearance Issued by Consultants 
+                        <h3 class="card-title"> Report of Clearance Issued by Consultants
                             <?php echo date("d-m-Y") ?>
                         </h3>
                     </div>
@@ -45,10 +45,11 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $count = 1;
+
                                 if (!empty($userlists)) {
                                     foreach ($userlists as $data) {
                                         // Conditionally set the allocated_type text
+                                        $count = 1;
                                         if ($data['allocated_type'] == 1) {
                                             $allocated_type = 'Public';
                                             $rowColor = '#d4edda'; // Green for Public
@@ -61,8 +62,9 @@
                                         }
                                 ?>
                                         <tr style="background-color: <?php echo $rowColor; ?>;">
+
                                             <td>
-                                                <?php echo $count++; ?>
+                                                <?php echo '<b>' .substr($data['waecCode'], -2) . '</b>'; ?>
                                             </td>
                                             <td>
                                                 <!-- Tooltip added for allocated type -->

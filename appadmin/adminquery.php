@@ -251,7 +251,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                     'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
                     'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode'
                 ],
-                'select' => 'tbl_schoolallocation.consultantID, lga_tbl.lga AS allocated_zone, tbl_schoollist.schType AS allocated_type',
+                'select' => 'tbl_schoolallocation.consultantID, lga_tbl.waecCode AS waecCode, lga_tbl.lga AS allocated_zone, tbl_schoollist.schType AS allocated_type',
             ];
             // Get the school allocation types for each consultant
             $allocationDetails = $model->getRows($tblName, $conditions);
@@ -279,6 +279,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 $row['cleared_count'] = 0; // Default value for cleared schools
                 $row['allocated_zone'] = ''; // Default value for allocated zone
                 $row['allocated_type'] = ''; // Default value for allocated type
+                $row['waecCode'] = ''; // Default value for allocated type
     
                 // Map allocation count to the consultant
                 foreach ($allocationCounts as $allocation) {
@@ -301,6 +302,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                     if ($allocationDtl['consultantID'] == $row['userid']) {
                         $row['allocated_zone'] = $allocationDtl['allocated_zone'];
                         $row['allocated_type'] = $allocationDtl['allocated_type'];
+                        $row['waecCode'] = $allocationDtl['waecCode'];
                         break;
                     }
                 }
