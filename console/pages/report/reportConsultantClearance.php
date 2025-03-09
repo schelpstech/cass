@@ -10,7 +10,7 @@
             "info": true,
             "pageLength": 100,
             "order": [
-                [3, "asc"]
+                [1, "asc"]
             ], // Sorting by S/N
             "buttons": ["copy", "csv", "excel", "pdf", "print"], // Export buttons
             "language": {
@@ -37,9 +37,8 @@
                             <thead>
                                 <tr>
                                     <th>S/N</th>
-                                    <th>UserCode</th>
-                                    <th>Company Name</th>
                                     <th>Allocated Zone</th>
+                                    <th>Company Name</th>
                                     <th>Allocated Schools</th>
                                     <th>Cleared Schools</th>
                                 </tr>
@@ -65,18 +64,14 @@
                                             <td>
                                                 <?php echo $count++; ?>
                                             </td>
-                                            <td style="text-align: center;">
-                                                <?php echo '<b>' . $data['user_name'] . '</b>'; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo '<b>' . $data['companyName']  . '</b>'; ?>
-                                            </td>
-                                            
                                             <td>
                                                 <!-- Tooltip added for allocated type -->
                                                 <span title="<?php echo $allocated_type; ?>">
                                                     <?php echo '<b>' . $data['allocated_zone'] . ' - ' . $allocated_type . '</b>'; ?>
                                                 </span>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' . $data['companyName']  . '</b>'; ?>
                                             </td>
                                             <td>
                                                 <?php echo '<b>' . $data['allocated_candidates'] . '</b>'; ?>
