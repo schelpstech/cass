@@ -10,7 +10,7 @@
             "info": true,
             "pageLength": 100,
             "order": [
-                [0, "asc"]
+                [1, "asc"]
             ], // Sorting by S/N
             "buttons": ["copy", "csv", "excel", "pdf", "print"], // Export buttons
             "language": {
