@@ -27,7 +27,7 @@
             <div class="col-lg-10 offset-1">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title"> List of Allocated Schools
+                        <h3 class="card-title"> Report of Clearance Issued by Consultants 
                             <?php echo date("d-m-Y") ?>
                         </h3>
                     </div>
