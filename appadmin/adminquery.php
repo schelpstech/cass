@@ -83,7 +83,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
         ]);
 
 
-//Dashboard Two       
+        //Dashboard Two       
         // Sum up the total remittance paid
         // Retrieve remittance paid
         $totalRemittancePaid = $model->getRows('tbl_remittance', [
@@ -216,6 +216,98 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
             ]
         ];
         $userlists = $model->getRows($tblName, $conditions);
+    
+        if (!empty($userlists)) {
+            // Collect all consultant IDs
+            $consultantIds = array_map(function ($row) {
+                return $row['userid'];
+            }, $userlists);
+    
+            // Fetch the count of allocations for each consultant in one query
+            $tblName = 'tbl_schoolallocation';
+            $conditions = [
+                'where_in' => [
+                    'consultantID' => $consultantIds
+                ],
+                'where' => [
+                    'examYear' => $examYear['id'],
+                ],
+                'group_by' => 'consultantID',
+                'select' => 'consultantID, COUNT(*) AS allocations_count',
+            ];
+            // Get the school allocation counts for each consultant
+            $allocationCounts = $model->getRows($tblName, $conditions);
+    
+            // Fetch the zone and school type allocations for each consultant in one query
+            $tblName = 'tbl_schoolallocation';
+            $conditions = [
+                'where_in' => [
+                    'consultantID' => $consultantIds
+                ],
+                'where' => [
+                    'examYear' => $examYear['id'],
+                ],
+                'joinl' => [
+                    'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
+                    'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode'
+                ],
+                'select' => 'tbl_schoolallocation.consultantID, lga_tbl.lga AS allocated_zone, tbl_schoollist.schType AS allocated_type',
+            ];
+            // Get the school allocation types for each consultant
+            $allocationDetails = $model->getRows($tblName, $conditions);
+    
+            // Fetch the count of schools cleared by each consultant in one query
+            $tblName = 'tbl_remittance';
+            $conditions = [
+                'where_in' => [
+                    'submittedby' => $consultantIds
+                ],
+                'where' => [
+                    'examYearRef' => $examYear['id'],
+                    'clearanceStatus' => 200
+                ],
+                'group_by' => 'submittedby',
+                'select' => 'submittedby, COUNT(*) AS cleared_count',
+            ];
+    
+            // Get the school cleared counts for each consultant
+            $clearedCount = $model->getRows($tblName, $conditions);
+    
+            // Now, map the allocation counts, cleared counts, and allocation details to the consultants
+            foreach ($userlists as &$row) {
+                $row['allocated_candidates'] = 0; // Default value for allocated candidates
+                $row['cleared_count'] = 0; // Default value for cleared schools
+                $row['allocated_zone'] = ''; // Default value for allocated zone
+                $row['allocated_type'] = ''; // Default value for allocated type
+    
+                // Map allocation count to the consultant
+                foreach ($allocationCounts as $allocation) {
+                    if ($allocation['consultantID'] == $row['userid']) {
+                        $row['allocated_candidates'] = $allocation['allocations_count'];
+                        break;
+                    }
+                }
+    
+                // Map cleared count to the consultant
+                foreach ($clearedCount as $clearance) {
+                    if ($clearance['submittedby'] == $row['userid']) {
+                        $row['cleared_count'] = $clearance['cleared_count'];
+                        break;
+                    }
+                }
+    
+                // Map allocation details (zone and type) to the consultant
+                foreach ($allocationDetails as $allocationDtl) {
+                    if ($allocationDtl['consultantID'] == $row['userid']) {
+                        $row['allocated_zone'] = $allocationDtl['allocated_zone'];
+                        $row['allocated_type'] = $allocationDtl['allocated_type'];
+                        break;
+                    }
+                }
+            }
+    
+            // Now $userlists will have 'allocated_candidates', 'cleared_count', 'allocated_zone', and 'allocated_type' fields populated for each consultant
+        }
     }
-
+    
 }

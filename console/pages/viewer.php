@@ -37,12 +37,8 @@ include '../include/aside.php';
                     include './report/consultantMgr.php';
                     break;
 
-                case 'capturingRecord':
-                    include './userDashboard.php';
-                    echo '<br><br>';
-                    include './forms/clearance/capturing.php';
-                    echo '<br><br>';
-                    include './report/capturingReport.php';
+                case 'reportConsultantClearance':
+                    include './report/reportConsultantClearance.php';
                     break;
 
                 case 'modifyCapturing':

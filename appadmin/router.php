@@ -20,10 +20,10 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
-    'capturingRecord' => [
-        'pageid' => 'capturingRecord',
-        'page_name' => 'Record Number of Captured Candidates',
-        'module' => 'Clearance',
+    'reportConsultantClearance' => [
+        'pageid' => 'reportConsultantClearance',
+        'page_name' => 'Report of Clearance Issued by Consultants',
+        'module' => 'Report',
         'reference' => null,
         'clearedSchool' => null
     ],
