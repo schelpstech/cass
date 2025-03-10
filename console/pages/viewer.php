@@ -53,10 +53,8 @@ include '../include/aside.php';
                     include './forms/clearance/addCandidates.php';
                     break;
 
-                case 'transactionHistories':
-                    include './userDashboard.php';
-                    echo '<br><br>';
-                    include './report/transactionArchive.php';
+                case 'reportTransactionHistory':
+                    include './report/transactionRecords.php';
                     break;
 
                     case 'consultantClearedSchools':

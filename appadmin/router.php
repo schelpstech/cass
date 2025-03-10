@@ -41,9 +41,9 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
-    'transactionHistories' => [
-        'pageid' => 'transactionHistories',
-        'page_name' => 'Transaction History',
+    'reportTransactionHistory' => [
+        'pageid' => 'reportTransactionHistory',
+        'page_name' => 'All Transaction History',
         'module' => 'Clearance',
         'reference' => null,
         'clearedSchool' => null
