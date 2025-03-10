@@ -12,7 +12,7 @@
             "order": [
                 [1, "asc"]
             ], // Sorting by S/N
-            "buttons": ["copy", "csv", "excel", "pdf", "print"], // Export buttons
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"], // Export buttons
             "language": {
                 "emptyTable": "No data available", // Custom message for empty table
                 "info": "Showing _START_ to _END_ of _TOTAL_ records", // Pagination info
@@ -41,6 +41,7 @@
                                     <th>Company Name</th>
                                     <th>Allocated Schools</th>
                                     <th>Cleared Schools</th>
+                                    <th>Pending Schools</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -80,6 +81,9 @@
                                             </td>
                                             <td>
                                                 <?php echo '<b>' . $data['cleared_count'] . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' .$data['allocated_candidates'] - $data['cleared_count'] . '</b>'; ?>
                                             </td>
                                         </tr>
                                 <?php
