@@ -350,7 +350,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
             'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
             'tbl_remittance' => ' on tbl_remittance.recordSchoolCode = tbl_schoolallocation.schoolCode'
         ],
-        'order_by' => 'lgaCode ASC',
+        'order_by' => 'lgaCode ASC, centreNumber ASC',
     ];
     // Get the school allocation types for each consultant
     $listofallocationDetails = $model->getRows($tblName, $conditions);
