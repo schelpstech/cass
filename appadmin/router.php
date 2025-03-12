@@ -34,6 +34,20 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
+    'manageschoollist' => [
+        'pageid' => 'manageschoollist',
+        'page_name' => 'List of Schools',
+        'module' => 'Schools',
+        'reference' => null,
+        'clearedSchool' => null
+    ],
+    'manageschoolallocation' => [
+        'pageid' => 'manageschoolallocation',
+        'page_name' => 'List of Allocated Schools',
+        'module' => 'Schools',
+        'reference' => null,
+        'clearedSchool' => null
+    ],
     'consultantpwdMgr' => [
         'pageid' => 'consultantpwdMgr',
         'page_name' => 'Change Login Credential',
@@ -48,26 +62,12 @@ $navigationSettings = [
         'reference' => null,
         'clearedSchool' => null
     ],
-    'modifyCapturing' => [
-        'pageid' => 'modifyCapturing',
-        'page_name' => 'Modify Number of Captured Candidates',
-        'module' => 'Clearance',
-        'reference' =>  !empty($_GET['reference']) ? $_GET['reference'] : null,
-        'clearedSchool' => null
-    ],
     'addCandidates' => [
         'pageid' => 'addCandidates',
         'page_name' => 'Generate Clearance for Additional Captured Candidates',
         'module' => 'Clearance',
         'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
         'clearedSchool' => null
-    ],
-    'clearancePage' => [
-        'pageid' => 'clearancePage',
-        'page_name' => 'Clearance Printout',
-        'module' => 'Clearance',
-        'reference' => !empty($_GET['reference']) ? $_GET['reference'] : null,
-        'clearedSchool' => !empty($_GET['clearedSchool']) ? $utility->inputDecode($_GET['clearedSchool']) : (isset($_SESSION['clearedSchool']) ? $_SESSION['clearedSchool'] : null),
     ]
 ];
 

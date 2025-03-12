@@ -324,5 +324,34 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
         ];
         $transHistory = $model->getRows($tblName, $conditions);
     }
-    
+
+    //List of Schools
+    if (!empty($_SESSION['pageid']) && $_SESSION['pageid'] == 'manageschoollist') {
+        // Check Payment History
+        $tblName = 'tbl_schoollist';
+        $conditions = [
+            'joinl' => [
+                'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode'
+            ],
+            'order_by' => 'lgaCode ASC',
+        ];
+        $listofSchools = $model->getRows($tblName, $conditions);
+    }
+
+    // Fetch the list of schools allocated for each consultant in one query
+    $tblName = 'tbl_schoolallocation';
+    $conditions = [
+        'where' => [
+            'examYear' => $examYear['id'],
+        ],
+        'joinl' => [
+            'tbl_consultantdetails' => ' on tbl_consultantdetails.userId = tbl_schoolallocation.consultantID',
+            'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_schoolallocation.schoolCode',
+            'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
+            'tbl_remittance' => ' on tbl_remittance.recordSchoolCode = tbl_schoolallocation.schoolCode'
+        ],
+        'order_by' => 'lgaCode ASC',
+    ];
+    // Get the school allocation types for each consultant
+    $listofallocationDetails = $model->getRows($tblName, $conditions);
 }

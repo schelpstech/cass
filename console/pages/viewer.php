@@ -45,8 +45,12 @@ include '../include/aside.php';
                     include './forms/clearance/modifyCapturing.php';
                     break;
 
-                case 'clearancePage':
-                    include './report/clearance.php';
+                case 'manageschoollist':
+                    include './report/listofschools.php';
+                    break;
+
+                case 'manageschoolallocation':
+                    include './report/allocatedSchoolList.php';
                     break;
 
                 case 'addCandidates':
