@@ -14,12 +14,12 @@
                             </button>
                         </div>
                     </div>
-                    <form action="../../app/companyModule.php" method="post">
+                    <form action="../../appadmin/companyModule.php" method="post">
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Consultant UserCode :</label>
                                 <div class="input-group date" data-target-input="nearest">
-                                    <input type="text" class="form-control" name="usercode" required="yes" />
+                                    <input type="text" class="form-control" name="usercode" required="yes" value="<?php echo 'assoec'.substr(date("Y"),-2). ($cntUsers+2)?>" readonly/>
                                     <div class="input-group-append">
                                         <div class="input-group-text"><i class="fa fa-synagogue"></i></div>
                                     </div>
@@ -67,8 +67,8 @@
                                     <div>
                                         <button
                                             type="submit"
-                                            name="edit_company_details"
-                                            value="<?php echo $utility->inputEncode('company_profile_editor_form'); ?>"
+                                            name="profile_company_details"
+                                            value="<?php echo $utility->inputEncode('company_profile_creator_form'); ?>"
                                             class="btn btn-info btn-block"
                                             id="updateProfileButton"
                                             >

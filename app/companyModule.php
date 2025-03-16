@@ -73,7 +73,7 @@ if (isset($_POST['edit_company_details']) && $utility->inputDecode($_POST['edit_
         // Redirect with error notification
         $utility->redirectWithNotification('danger', 'An error occurred while updating the consultant details.', 'consultantDashboard');
     }
-}elseif (isset($_POST['new_user_password_credential']) && $utility->inputDecode($_POST['new_user_password_credential']) === "user_password_editor_form") {
+} elseif (isset($_POST['new_user_password_credential']) && $utility->inputDecode($_POST['new_user_password_credential']) === "user_password_editor_form") {
     // Ensure the user is authenticated
     if (!isset($_SESSION['activeID']) || empty($_SESSION['activeID'])) {
         $utility->redirectWithNotification('danger', 'Unauthorized access. Please log in.', 'login');

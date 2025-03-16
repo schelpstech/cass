@@ -38,7 +38,14 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
     $examYear = $model->getRows($tblName, $conditions);
     $_SESSION['examYear'] =  $examYear['year'];
 
+     //Count the number of Consultants to generate new usercode
+    $tblName = 'tbl_consultantdetails';
+    $conditions = [
+        'return_type' => 'count'
+    ];
+    $cntUsers = $model->getRows($tblName, $conditions);
 
+    
     if (
         !empty($_SESSION['module']) && isset($_SESSION['module']) &&
         ($_SESSION['module'] == 'Dashboard' || $_SESSION['module'] == 'Clearance')
