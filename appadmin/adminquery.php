@@ -38,14 +38,29 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
     $examYear = $model->getRows($tblName, $conditions);
     $_SESSION['examYear'] =  $examYear['year'];
 
-     //Count the number of Consultants to generate new usercode
+    //Count the number of Consultants to generate new usercode
     $tblName = 'tbl_consultantdetails';
     $conditions = [
         'return_type' => 'count'
     ];
     $cntUsers = $model->getRows($tblName, $conditions);
 
-    
+    //Select all Zones
+    $tblName = 'lga_tbl';
+    $conditions = [
+        'orderby' => 'waecCode ASC',
+    ];
+    $zonelist = $model->getRows($tblName, $conditions);
+
+    $tblName = 'book_of_life';
+    $conditions = [
+        'joinl' => [
+            'tbl_consultantdetails' => ' on book_of_life.userid = tbl_consultantdetails.userId'
+        ]
+    ];
+    $consultantList = $model->getRows($tblName, $conditions);
+
+
     if (
         !empty($_SESSION['module']) && isset($_SESSION['module']) &&
         ($_SESSION['module'] == 'Dashboard' || $_SESSION['module'] == 'Clearance')

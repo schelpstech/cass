@@ -46,10 +46,12 @@ include '../include/aside.php';
                     break;
 
                 case 'manageschoollist':
+                    include './form/schoolCreate.php';
                     include './report/listofschools.php';
                     break;
 
                 case 'manageschoolallocation':
+                    include './form/schoolAllocate.php';
                     include './report/allocatedSchoolList.php';
                     break;
 
