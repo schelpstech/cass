@@ -40,8 +40,8 @@
                                         $count = 1;
                                         $totalCandidates = 0;
                                         foreach ($clearedSchoolRecords as $data) {
-                                            $totalCandidates += intval($utility->inputDecode($data['numberCaptured']));
-                                            $totalCandidates = $utility->Number($totalCandidates);
+                                            $totalCandidates += $utility->inputDecode($data['numberCaptured']);
+                                            $totalCand = $utility-> number($totalCandidates);
                                             ?>
                                             
                                             <tr>
@@ -89,7 +89,7 @@
 </section>
 
 <script>
-    document.getElementById("totalCandidates").textContent = "<?php echo $totalCandidates; ?>";
+    document.getElementById("totalCandidates").textContent = "<?php echo $totalCand; ?>";
 
     $(document).ready(function() {
         $('#example').DataTable({
@@ -105,27 +105,9 @@
             "dom": 'Bfrtip',
             "buttons": [
                 {
-                    extend: 'pdf',
-                    text: 'Export PDF',
-                    className: 'btn btn-danger',
-                    customize: function(doc) {
-                        doc.content.splice(0, 0, {
-                            alignment: 'center',
-                            image: getBase64Image(document.getElementById("consultantLogo")),
-                            width: 200
-                        });
-                        doc.content.splice(1, 0, {
-                            alignment: 'center',
-                            text: "Summary of WASSCE 2025 Capturing Exercise",
-                            fontSize: 18,
-                            bold: true
-                        });
-                    }
-                },
-                {
                     extend: 'print',
-                    text: 'Print',
-                    className: 'btn btn-primary',
+                    text: 'Print Report',
+                    className: 'btn btn-info',
                     customize: function(win) {
                         $(win.document.body).prepend(
                             '<div style="text-align: center; margin-bottom: 20px;">' +
