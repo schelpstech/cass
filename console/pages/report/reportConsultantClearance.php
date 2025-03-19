@@ -42,6 +42,8 @@
                                     <th>Allocated Schools</th>
                                     <th>Cleared Schools</th>
                                     <th>Pending Schools</th>
+                                    <th>Number Captured</th>
+                                    <th>Remittance</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,6 +86,12 @@
                                             </td>
                                             <td>
                                                 <?php echo '<b>' .$data['allocated_candidates'] - $data['cleared_count'] . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' . $utility->number($data['number_captured']) . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' . $utility->money($data['amount_remitted']) . '</b>'; ?>
                                             </td>
                                         </tr>
                                 <?php
