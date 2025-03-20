@@ -15,6 +15,8 @@ if (!isset($_SESSION['active'])) {
         <?php
         if (isset($_SESSION['clearedSchool']) && $_SESSION['pageid'] === 'clearancePage') {
             echo $printClearanceInfo['centreNumber'] . ' - ' . $printClearanceInfo['SchoolName'] . ' - CASS 3 Clearance';
+        } elseif ($_SESSION['pageid'] == 'consultantClearedSchools') {
+            echo '';
         } else {
             echo $_SESSION['active'] . ' - CASS 3 Clearance Portal';
         } ?>
