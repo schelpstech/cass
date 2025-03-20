@@ -11,7 +11,7 @@
                     <!-- Consultant Company Logo -->
                     <div class="card-header text-center">
                         <img id="consultantLogo" src="../../storage/app/moest.jpg" width="300" alt="MOEST Logo" />
-                        <h2 class="mt-3"><b>Summary of WASSCE 2025 Capturing Exercise</b></h2>
+                        <br><h3 class="mt-3"><b>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</b></h3>
                     </div>
 
                     <div class="card-body">
@@ -112,7 +112,7 @@
                         $(win.document.body).prepend(
                             '<div style="text-align: center; margin-bottom: 20px;">' +
                             '<img src="' + document.getElementById("consultantLogo").src + '" width="200"><br>' +
-                            '<h2>Summary of WASSCE 2025 Capturing Exercise</h2><br>' +
+                            '<br><h3>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</h3><br>' +
                             '<h4 style="text-align:left;">Consultant Company: ' + document.getElementById("consultantName").textContent + '</h4>' +
                             '<h4 style="text-align:left;">Number of Cleared Schools: ' + document.getElementById("clearedSchoolCount").textContent + '</h4>' +
                             '<h4 style="text-align:left;">Total Number of Candidates: ' + document.getElementById("totalCandidates").textContent + '</h4>' +
