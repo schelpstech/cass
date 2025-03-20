@@ -11,7 +11,8 @@
                     <!-- Consultant Company Logo -->
                     <div class="card-header text-center">
                         <img id="consultantLogo" src="../../storage/app/moest.jpg" width="300" alt="MOEST Logo" />
-                        <br><h3 class="mt-3"><b>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</b></h3>
+                        <br>
+                        <h3 class="mt-3"><b>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</b></h3>
                     </div>
 
                     <div class="card-body">
@@ -41,9 +42,9 @@
                                         $totalCandidates = 0;
                                         foreach ($clearedSchoolRecords as $data) {
                                             $totalCandidates += $utility->inputDecode($data['numberCaptured']);
-                                            $totalCand = $utility-> number($totalCandidates);
-                                            ?>
-                                            
+                                            $totalCand = $utility->number($totalCandidates);
+                                        ?>
+
                                             <tr>
                                                 <td><?php echo $count++; ?></td>
                                                 <td class="text-center"><b><?php echo htmlspecialchars($data['lga']); ?></b></td>
@@ -58,7 +59,7 @@
                                                 <td>
                                                     <?php
                                                     echo ($data['clearanceStatus'] == 200) ? '<span class="badge bg-success">Cleared</span>' : (($data['clearanceStatus'] == 100) ? '<span class="badge bg-danger">Not Cleared</span>' :
-                                                            '<span class="badge bg-warning">Unknown</span>');
+                                                        '<span class="badge bg-warning">Unknown</span>');
                                                     ?>
                                                 </td>
                                             </tr>
@@ -101,32 +102,32 @@
             "ordering": true,
             "info": true,
             "pageLength": 300,
-            "order": [[0, "asc"]],
+            "order": [
+                [0, "asc"]
+            ],
             "dom": 'Bfrtip',
-            "buttons": [
-                {
-                    extend: 'print',
-                    text: 'Print Report',
-                    className: 'btn btn-info',
-                    customize: function(win) {
-                        $(win.document.body).prepend(
-                            '<div style="text-align: center; margin-bottom: 20px;">' +
-                            '<img src="' + document.getElementById("consultantLogo").src + '" width="200"><br>' +
-                            '<br><h3>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</h3><br>' +
-                            '<h4 style="text-align:left;">Consultant Company: ' + document.getElementById("consultantName").textContent + '</h4>' +
-                            '<h4 style="text-align:left;">Number of Cleared Schools: ' + document.getElementById("clearedSchoolCount").textContent + '</h4>' +
-                            '<h4 style="text-align:left;">Total Number of Candidates: ' + document.getElementById("totalCandidates").textContent + '</h4>' +
-                            '</div>'
-                        );
-                        $(win.document.body).append(
-                            '<br><p style="text-align:center;"><strong>Full Name:</strong> _____________________________________</p><br>' +
-                            '<p style="text-align:center;"><strong>Designation:</strong> _____________________________________</p><br>' +
-                            '<p style="text-align:center;"><strong>Signature:</strong> _____________________________________</p><br>' +
-                            '<p style="text-align: center; font-size: 12px; margin-top: 20px;">Printed on: ' + new Date().toLocaleString() + '</p>'
-                        );
-                    }
+            "buttons": [{
+                extend: 'print',
+                text: 'Print Report',
+                className: 'btn btn-info',
+                customize: function(win) {
+                    $(win.document.body).prepend(
+                        '<div style="text-align: center; margin-bottom: 20px;">' +
+                        '<img src="' + document.getElementById("consultantLogo").src + '" width="200"><br>' +
+                        '<br><h3>Summary of WASSCE 2025 Biometrics and e-Registration Data Capturing Exercise</h3><br>' +
+                        '<h4 style="text-align:left;">Consultant Company: ' + document.getElementById("consultantName").textContent + '</h4>' +
+                        '<h4 style="text-align:left;">Number of Cleared Schools: ' + document.getElementById("clearedSchoolCount").textContent + '</h4>' +
+                        '<h4 style="text-align:left;">Total Number of Candidates: ' + document.getElementById("totalCandidates").textContent + '</h4>' +
+                        '</div>'
+                    );
+                    $(win.document.body).append(
+                        '<br><p style="text-align:center;"><strong>Full Name:</strong> _____________________________________</p><br>' +
+                        '<p style="text-align:center;"><strong>Designation:</strong> _____________________________________</p><br>' +
+                        '<p style="text-align:center;"><strong>Signature:</strong> _____________________________________</p><br>' +
+                        '<p style="text-align: center; font-size: 12px; margin-top: 20px;">Printed on: ' + new Date().toLocaleString() + '</p>'
+                    );
                 }
-            ]
+            }]
         }).buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
     });
 </script>

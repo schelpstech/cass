@@ -279,9 +279,17 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
             $conditions = [
                 'where_in' => ['submittedby' => $consultantIds],
                 'where' => ['examYearRef' => $examYear['id'], 'clearanceStatus' => 200],
-                'select' => 'submittedby, amountdue, numberCaptured', // Fetch raw amountdue for decoding
+                'select' => 'submittedby as remitted_submittedby, amountdue as remitted_amountdue, numberCaptured as remitted_numberCaptured ', // Fetch raw amountdue for decoding
             ];
             $remittanceAmount = $model->getRows($tblName, $conditions);
+
+            // Fetch pending remittance amounts
+            $conditions = [
+                'where_in' => ['submittedby' => $consultantIds],
+                'where' => ['examYearRef' => $examYear['id'], 'clearanceStatus' => 100],
+                'select' => 'submittedby, amountdue, numberCaptured', // Fetch raw amountdue for decoding
+            ];
+            $unremittedAmount = $model->getRows($tblName, $conditions);
     
             // Process and map data to consultants
             foreach ($userlists as &$row) {
@@ -292,6 +300,8 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 $row['waecCode'] = '';
                 $row['amount_remitted'] = 0; // Initialize
                 $row['number_captured'] = 0; // Initialize
+                $row['unremitted_amount'] = 0; // Initialize
+                $row['unremitted_num'] = 0; // Initialize
     
                 // Map allocation count
                 foreach ($allocationCounts as $allocation) {
@@ -319,16 +329,26 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                     }
                 }
     
-                // Decode and sum remittance amounts
-                foreach ($remittanceAmount as $remit) {
-                    if ($remit['submittedby'] == $row['userid']) {
-                        $decodedAmount = intval($utility->inputDecode($remit['amountdue'] ?? '0'));
-                        $decodednumber = intval($utility->inputDecode($remit['numberCaptured'] ?? '0'));
-                        $row['amount_remitted'] += $decodedAmount;
-                        $row['number_captured'] += $decodednumber;
-                    }
+            
+            // Decode and sum remittance amounts
+            foreach ($remittanceAmount as $remit) {
+                if ($remit['remitted_submittedby'] == $row['userid']) {
+                    $decodedAmount = intval($utility->inputDecode($remit['remitted_amountdue'] ?? '0'));
+                    $decodednumber = intval($utility->inputDecode($remit['remitted_numberCaptured'] ?? '0'));
+                    $row['amount_remitted'] += $decodedAmount;
+                    $row['number_captured'] += $decodednumber;
                 }
             }
+            // Decode and sum UNremitted amount and number
+            foreach ($unremittedAmount as $noremit) {
+                if ($noremit['submittedby'] == $row['userid']) {
+                    $decodedAmount_no = intval($utility->inputDecode($noremit['amountdue'] ?? '0'));
+                    $decodednumber_no = intval($utility->inputDecode($noremit['numberCaptured'] ?? '0'));
+                    $row['unremitted_amount'] += $decodedAmount_no;
+                    $row['unremitted_num'] += $decodednumber_no;
+                }
+            }
+        }
         }
     }
     

@@ -42,8 +42,10 @@
                                     <th>Allocated Schools</th>
                                     <th>Cleared Schools</th>
                                     <th>Pending Schools</th>
-                                    <th>Number Captured</th>
-                                    <th>Remittance</th>
+                                    <th>Number Remitted</th>
+                                    <th>Remittance Amount</th>
+                                    <th>Number Unremitted</th>
+                                    <th>Unremitted Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,6 +94,12 @@
                                             </td>
                                             <td>
                                                 <?php echo '<b>' . $utility->money($data['amount_remitted']) . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' . $utility->number($data['unremitted_num']) . '</b>'; ?>
+                                            </td>
+                                            <td>
+                                                <?php echo '<b>' . $utility->money($data['unremitted_amount']) . '</b>'; ?>
                                             </td>
                                         </tr>
                                 <?php
