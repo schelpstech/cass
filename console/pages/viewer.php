@@ -67,6 +67,10 @@ include '../include/aside.php';
                         include './report/clearanceSummary.php';
                         break;
 
+                    case 'reportSchoolClearance':
+                        include './report/clearanceSummary.php';
+                        break;
+
                         case 'consultantpwdMgr':
                             include './forms/consultant/passwordmgr.php';
                             break;

@@ -227,8 +227,32 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
         }
     }
 
+    //Summary of CLearance By Schools
+    $tblName = 'tbl_remittance';
+    $conditions = [
+        'where' => [
+            'examYearRef' => $examYear['id'],
+            'clearanceStatus' => 200
+        ],
+
+        'joinl' => [
+            'tbl_schoollist' => ' on tbl_schoollist.centreNumber = tbl_remittance.recordSchoolCode',
+            'lga_tbl' => ' on lga_tbl.waecCode = tbl_schoollist.lgaCode',
+        ],
+        'order_by' => 'centreNumber ASC',
+    ];
+    $clearedSchoolRecords = $model->getRows($tblName, $conditions);
+    $conditions = [
+        'where' => [
+            'examYearRef' => $examYear['id'],
+            'clearanceStatus' => 200
+        ],
+        'return_type' => 'count',
+    ];
+    $numclearedSchoolRecords = $model->getRows($tblName, $conditions);
+    // SUmmary Ends
     if (
-        isset($_SESSION['module']) && 
+        isset($_SESSION['module']) &&
         ($_SESSION['module'] == 'Report' || $_SESSION['module'] == 'Clearance')
     ) {
         $tblName = 'book_of_life';
@@ -238,11 +262,11 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
             ]
         ];
         $userlists = $model->getRows($tblName, $conditions);
-    
+
         if (!empty($userlists)) {
             // Collect all consultant IDs
             $consultantIds = array_map(fn($row) => $row['userid'], $userlists);
-    
+
             // Fetch school allocation counts
             $tblName = 'tbl_schoolallocation';
             $conditions = [
@@ -252,7 +276,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 'select' => 'consultantID, COUNT(*) AS allocations_count',
             ];
             $allocationCounts = $model->getRows($tblName, $conditions);
-    
+
             // Fetch allocation details
             $conditions = [
                 'where_in' => ['consultantID' => $consultantIds],
@@ -264,7 +288,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 'select' => 'tbl_schoolallocation.consultantID, lga_tbl.waecCode AS waecCode, lga_tbl.lga AS allocated_zone, tbl_schoollist.schType AS allocated_type',
             ];
             $allocationDetails = $model->getRows($tblName, $conditions);
-    
+
             // Fetch cleared count
             $tblName = 'tbl_remittance';
             $conditions = [
@@ -274,7 +298,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 'select' => 'submittedby, COUNT(*) AS cleared_count',
             ];
             $clearedCount = $model->getRows($tblName, $conditions);
-    
+
             // Fetch remittance amounts
             $conditions = [
                 'where_in' => ['submittedby' => $consultantIds],
@@ -290,7 +314,7 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 'select' => 'submittedby, amountdue, numberCaptured', // Fetch raw amountdue for decoding
             ];
             $unremittedAmount = $model->getRows($tblName, $conditions);
-    
+
             // Process and map data to consultants
             foreach ($userlists as &$row) {
                 $row['allocated_candidates'] = 0;
@@ -302,56 +326,61 @@ if (!empty($_SESSION['activeAdmin']) && isset($_SESSION['activeAdmin'])) {
                 $row['number_captured'] = 0; // Initialize
                 $row['unremitted_amount'] = 0; // Initialize
                 $row['unremitted_num'] = 0; // Initialize
-    
-                // Map allocation count
-                foreach ($allocationCounts as $allocation) {
-                    if ($allocation['consultantID'] == $row['userid']) {
-                        $row['allocated_candidates'] = $allocation['allocations_count'];
-                        break;
+                if (!empty($allocationCounts)) {
+                    // Map allocation count
+                    foreach ($allocationCounts as $allocation) {
+                        if ($allocation['consultantID'] == $row['userid']) {
+                            $row['allocated_candidates'] = $allocation['allocations_count'];
+                            break;
+                        }
                     }
                 }
-    
-                // Map cleared count
-                foreach ($clearedCount as $clearance) {
-                    if ($clearance['submittedby'] == $row['userid']) {
-                        $row['cleared_count'] = $clearance['cleared_count'];
-                        break;
+                if (!empty($clearedCount)) {
+                    // Map cleared count
+                    foreach ($clearedCount as $clearance) {
+                        if ($clearance['submittedby'] == $row['userid']) {
+                            $row['cleared_count'] = $clearance['cleared_count'];
+                            break;
+                        }
                     }
                 }
-    
-                // Map allocation details
-                foreach ($allocationDetails as $allocationDtl) {
-                    if ($allocationDtl['consultantID'] == $row['userid']) {
-                        $row['allocated_zone'] = $allocationDtl['allocated_zone'];
-                        $row['allocated_type'] = $allocationDtl['allocated_type'];
-                        $row['waecCode'] = $allocationDtl['waecCode'];
-                        break;
+                if (!empty($allocationDetails)) {
+                    // Map allocation details
+                    foreach ($allocationDetails as $allocationDtl) {
+                        if ($allocationDtl['consultantID'] == $row['userid']) {
+                            $row['allocated_zone'] = $allocationDtl['allocated_zone'];
+                            $row['allocated_type'] = $allocationDtl['allocated_type'];
+                            $row['waecCode'] = $allocationDtl['waecCode'];
+                            break;
+                        }
                     }
                 }
-    
-            
-            // Decode and sum remittance amounts
-            foreach ($remittanceAmount as $remit) {
-                if ($remit['remitted_submittedby'] == $row['userid']) {
-                    $decodedAmount = intval($utility->inputDecode($remit['remitted_amountdue'] ?? '0'));
-                    $decodednumber = intval($utility->inputDecode($remit['remitted_numberCaptured'] ?? '0'));
-                    $row['amount_remitted'] += $decodedAmount;
-                    $row['number_captured'] += $decodednumber;
+                if (!empty($remittanceAmount)) {
+                    // Decode and sum remittance amounts
+                    foreach ($remittanceAmount as $remit) {
+                        if ($remit['remitted_submittedby'] == $row['userid']) {
+                            $decodedAmount = intval($utility->inputDecode($remit['remitted_amountdue'] ?? '0'));
+                            $decodednumber = intval($utility->inputDecode($remit['remitted_numberCaptured'] ?? '0'));
+                            $row['amount_remitted'] += $decodedAmount;
+                            $row['number_captured'] += $decodednumber;
+                        }
+                    }
+                }
+                if (!empty($unremittedAmount)) {
+                    // Decode and sum UNremitted amount and number
+                    foreach ($unremittedAmount as $noremit) {
+                        if ($noremit['submittedby'] == $row['userid']) {
+                            $decodedAmount_no = intval($utility->inputDecode($noremit['amountdue'] ?? '0'));
+                            $decodednumber_no = intval($utility->inputDecode($noremit['numberCaptured'] ?? '0'));
+                            $row['unremitted_amount'] += $decodedAmount_no;
+                            $row['unremitted_num'] += $decodednumber_no;
+                        }
+                    }
                 }
             }
-            // Decode and sum UNremitted amount and number
-            foreach ($unremittedAmount as $noremit) {
-                if ($noremit['submittedby'] == $row['userid']) {
-                    $decodedAmount_no = intval($utility->inputDecode($noremit['amountdue'] ?? '0'));
-                    $decodednumber_no = intval($utility->inputDecode($noremit['numberCaptured'] ?? '0'));
-                    $row['unremitted_amount'] += $decodedAmount_no;
-                    $row['unremitted_num'] += $decodednumber_no;
-                }
-            }
-        }
         }
     }
-    
+
 
     //Transaction History
     if (!empty($_SESSION['pageid']) && $_SESSION['pageid'] == 'reportTransactionHistory') {

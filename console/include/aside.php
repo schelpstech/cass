@@ -84,7 +84,7 @@
                         <li class="nav-item">
                             <a href="../../appadmin/router.php?pageid=<?php echo $utility->inputEncode('reportSchoolClearance'); ?>" class="nav-link <?php echo ($pageId == 'reportSchoolClearance') ? 'active' : ''; ?>">
                                 <i class="fas fa-synagogue nav-icon"></i>
-                                <p>School Clearance Report </p>
+                                <p>All School Clearance Report </p>
                             </a>
                         </li>
                         <li class="nav-item">
